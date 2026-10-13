@@ -1,0 +1,38 @@
+\begin{table}[t]
+\centering
+\caption{Held-out reference predictors for the four PBMC target donors in the
+task-0 PCA-100 latent, scored \emph{decoded}. Each latent delta is read out with
+the corresponding target donor's affine task decoder. Predictors and targets
+are evaluated over all $4{,}452$ observed
+(\texttt{donor}, \texttt{cell\_type}, \texttt{cytokine}) STATE-test strata,
+using all perturbed cells and the complete same-donor, same-cell-type PBS
+control pool. B1 is the target donor/cell-type mean over finetune cytokines.
+B3 is the cell-type-specific task-0 mean over held-out cytokines. B4 transfers
+the same cytokine and cell type, averaged across task-0 donors. O1 adds the
+centered B4 cytokine-specific residual to B1. C2 is the exact
+Pearson-reachable projection onto the centered column space of each target
+decoder. Residual Pearson~$\Delta$ removes the predictor and target mean
+within each target-donor/cell-type pool; cytokine-blind rules therefore score
+exactly $0$. L1 discrimination is omitted because PBMC Cell-Eval pools full
+cell distributions across donors within each cell type, whereas these
+references define one centroid per donor/cell-type/cytokine.}
+\label{tab:pbmc_heldout_baselines_pca100}
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{llcc}
+\toprule
+ & Predictor & $\uparrow$ Pearson~$\Delta$
+ & $\uparrow$ Residual~$\Delta$ \\
+\midrule
+B1 & Target finetune mean (cytokine-blind)
+ & $0.203$ & $0$ \\
+B3 & Task-0 generic, held-out cytokines
+ & $0.004$ & $0$ \\
+B4 & Task-0 per-cytokine transfer
+ & $0.275$ & $0.343$ \\
+O1 & Target arrow $+$ task-0 residual
+ & $0.369$ & $0.343$ \\
+C2 & PCA-100 reachability ceiling
+ & $0.693$ & $0.709$ \\
+\bottomrule
+\end{tabular}
+\end{table}

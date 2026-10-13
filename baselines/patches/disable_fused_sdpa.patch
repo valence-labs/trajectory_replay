@@ -1,0 +1,36 @@
+# Disable torch 2.0.1 fused SDPA kernels, which miscompile on sm_90 (H100).
+# Without this, the UNet backward dies with "GET was unable to find an engine to
+# execute this computation" (or an illegal instruction with cuDNN off). A100
+# (sm_80) is unaffected. Apply after re-clone:
+#   patch -p1 -d baselines/diffusion_continual_learning < baselines/patches/disable_fused_sdpa.patch
+--- a/train_cl.py
++++ b/train_cl.py
+@@ -585,10 +585,28 @@ def get_solver_strategy(solver_type: str, model_config, strategy_config, generat
+     return cl_strategy
+ 
+ 
++def _disable_fused_sdpa_if_needed():
++    """torch 2.0.1's flash / mem-efficient attention kernels miscompile on sm_90
++    (H100): the UNet backward dies with "GET was unable to find an engine" or an
++    illegal instruction. The math fallback is correct on every arch and the
++    attention blocks here are tiny (8x8 and 4x4), so the cost is negligible.
++    Set DISABLE_FUSED_SDPA=0 to keep the fused kernels.
++    """
++    if os.environ.get("DISABLE_FUSED_SDPA", "1") != "1":
++        return
++    if not hasattr(torch.backends.cuda, "enable_flash_sdp"):
++        return
++    torch.backends.cuda.enable_flash_sdp(False)
++    torch.backends.cuda.enable_mem_efficient_sdp(False)
++    torch.backends.cuda.enable_math_sdp(True)
++    print("DISABLE_FUSED_SDPA=1: using math attention kernels")
++
++
+ def run_experiment(args, seed: int, device: torch.device):
+     # --- SEEDING
+     RNGManager.set_random_seeds(seed)
+     torch.backends.cudnn.deterministic = True
++    _disable_fused_sdpa_if_needed()
+     
+     run_name = "gr"
+ 

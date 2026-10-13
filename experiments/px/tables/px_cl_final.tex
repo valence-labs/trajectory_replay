@@ -1,0 +1,33 @@
+% Requires \usepackage[table]{xcolor}, \usepackage{booktabs}, \usepackage{graphicx}, and natbib.
+\begin{table*}[t]
+\centering
+\definecolor{trajectoryrow}{HTML}{E5EEF3}
+\definecolor{referencerow}{HTML}{F0F0F0}
+\setlength{\tabcolsep}{4.5pt}
+\small
+\caption{\textbf{Continual phenomic generation on RxRx1.} Final-checkpoint performance after the U2OS-01$\rightarrow$U2OS-02$\rightarrow$U2OS-03 experiment stream. Per-experiment FID compares composition-matched generated and test images within each biological experiment; stream metrics pool all three experiments. FDD denotes Fr\'echet distance in DINOv2 feature space. Means with standard errors are reported over seeds 42, 69, and 1714. Adaptive $\lambda$ is selected using validation FID; equal-task uses $\lambda_k=k/(k+1)$. Gray rows retain real historical data and are privileged references; blue rows denote trajectory replay. Bold marks the best memory-free mean in each column. Lower is better.}
+\label{tab:px_cl_final}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Method & \multicolumn{3}{c}{Per-experiment FID $\downarrow$} & \multicolumn{2}{c}{Pooled stream $\downarrow$} \\
+\cmidrule(lr){2-4}\cmidrule(l){5-6}
+& U2OS-01 & U2OS-02 & U2OS-03 & FID & DINOv2 FDD \\
+\midrule
+\rowcolor{referencerow} \textbf{Joint training} (all data; upper bound) & $29.7$ {\scriptsize $(\pm\,0.2)$} & $19.9$ {\scriptsize $(\pm\,0.2)$} & $26.6$ {\scriptsize $(\pm\,0.2)$} & $12.3$ {\scriptsize $(\pm\,0.2)$} & $66.4$ {\scriptsize $(\pm\,1.4)$} \\
+\rowcolor{referencerow} Real replay (stored data) & $29.7$ {\scriptsize $(\pm\,0.4)$} & $19.6$ {\scriptsize $(\pm\,0.2)$} & $26.3$ {\scriptsize $(\pm\,0.3)$} & $12.2$ {\scriptsize $(\pm\,0.3)$} & $66.1$ {\scriptsize $(\pm\,1.0)$} \\
+\midrule
+Naive fine-tuning & $\mathbf{36.0}$ {\scriptsize $(\pm\,0.6)$} & $83.0$ {\scriptsize $(\pm\,1.6)$} & $\mathbf{26.0}$ {\scriptsize $(\pm\,0.1)$} & $24.5$ {\scriptsize $(\pm\,0.3)$} & $110.1$ {\scriptsize $(\pm\,1.3)$} \\
+Generative distillation (diffusion) \citep{masip2025continual} & $80.9$ {\scriptsize $(\pm\,6.9)$} & $82.1$ {\scriptsize $(\pm\,2.6)$} & $42.0$ {\scriptsize $(\pm\,0.3)$} & $46.4$ {\scriptsize $(\pm\,3.6)$} & $218.2$ {\scriptsize $(\pm\,13.4)$} \\
+\midrule
+Generative replay (ODE, adaptive $\lambda$) & $71.4$ {\scriptsize $(\pm\,0.3)$} & $27.1$ {\scriptsize $(\pm\,0.2)$} & $27.0$ {\scriptsize $(\pm\,0.2)$} & $22.0$ {\scriptsize $(\pm\,0.1)$} & $119.0$ {\scriptsize $(\pm\,1.6)$} \\
+Generative replay (ODE, equal-task $\lambda$) & $70.9$ {\scriptsize $(\pm\,1.1)$} & $26.8$ {\scriptsize $(\pm\,0.1)$} & $27.7$ {\scriptsize $(\pm\,0.1)$} & $22.2$ {\scriptsize $(\pm\,0.2)$} & $121.4$ {\scriptsize $(\pm\,1.7)$} \\
+\midrule
+\rowcolor{trajectoryrow} Trajectory replay (ODE, adaptive $\lambda$) & $39.6$ {\scriptsize $(\pm\,0.3)$} & $\mathbf{22.5}$ {\scriptsize $(\pm\,0.6)$} & $28.8$ {\scriptsize $(\pm\,0.1)$} & $\mathbf{16.8}$ {\scriptsize $(\pm\,0.2)$} & $\mathbf{96.1}$ {\scriptsize $(\pm\,1.9)$} \\
+\rowcolor{trajectoryrow} Trajectory replay (ODE, equal-task $\lambda$) & $40.5$ {\scriptsize $(\pm\,0.4)$} & $23.1$ {\scriptsize $(\pm\,0.6)$} & $28.6$ {\scriptsize $(\pm\,0.2)$} & $17.2$ {\scriptsize $(\pm\,0.4)$} & $99.5$ {\scriptsize $(\pm\,2.9)$} \\
+\rowcolor{trajectoryrow} Trajectory replay (MF-1, equal-task $\lambda$) & $48.9$ {\scriptsize $(\pm\,4.5)$} & $25.4$ {\scriptsize $(\pm\,0.9)$} & $28.8$ {\scriptsize $(\pm\,0.2)$} & $19.4$ {\scriptsize $(\pm\,1.2)$} & $102.2$ {\scriptsize $(\pm\,3.2)$} \\
+\rowcolor{trajectoryrow} Trajectory replay (MF-4, equal-task $\lambda$) & $46.4$ {\scriptsize $(\pm\,3.4)$} & $24.7$ {\scriptsize $(\pm\,0.8)$} & $28.9$ {\scriptsize $(\pm\,0.1)$} & $18.9$ {\scriptsize $(\pm\,0.7)$} & $101.7$ {\scriptsize $(\pm\,2.4)$} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

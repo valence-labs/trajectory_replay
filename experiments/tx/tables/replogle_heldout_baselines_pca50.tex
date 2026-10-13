@@ -1,0 +1,39 @@
+\begin{table}[t]
+\centering
+\caption{Held-out reference predictors for Replogle HepG2 in the task-0
+PCA-50 latent, scored \emph{decoded}: every rule is expressed as a latent
+delta and read out with the continual-learning task-1 decoder
+$D_1(z)=\mathrm{diag}(a_1)(Pz+\mu)+b_1$, so each reference is constrained to
+the same $50$-dimensional subspace as the model.
+Observed perturbed cells and the control pool are both kept whole, matching
+\texttt{eval\_track} (\texttt{-{}-eval-max-cells-per-stratum 0},
+\texttt{-{}-eval-max-control-cells 0}); the basal is every HepG2 non-test
+control. These rules are centroids, so they do not sample $K$ model cells.
+Macro Pearson~$\Delta$ is the mean per-stratum gene-space correlation;
+residual Pearson~$\Delta$ removes each side's own pool mean first, so a rule
+carrying no perturbation identity scores exactly $0$;
+L1 discrimination is Cell-Eval's \texttt{discrimination\_score} called
+directly on the baseline centroids ($0.5$ is chance).
+All $945$ held-out perturbations are scored. Every held-out gene appears in
+at least one task-0 line; O1 uses the mean task-0 residual over whichever of
+jurkat, k562 and rpe1 contain that gene.}
+\label{tab:replogle_heldout_baselines_pca50}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{llccc}
+\toprule
+ & Predictor & $\uparrow$ Pearson~$\Delta$
+ & $\uparrow$ Residual~$\Delta$ & $\uparrow$ L1 disc. \\
+\midrule
+B1 & HepG2 finetune mean (gene-blind)
+ & $0.393$ & $0$ & $0.502$ \\
+B3 & Task-0 generic, same genes
+ & $0.378$ & $0$ & $0.502$ \\
+B4 & Task-0 per-gene transfer
+ & $0.386$ & $0.357$ & $0.691$ \\
+O1 & HepG2 arrow $+$ task-0 residual
+ & $0.384$ & $0.357$ & $0.693$ \\
+C2 & PCA-50 reachability ceiling
+ & $0.643$ & $0.676$ & $0.928$ \\
+\bottomrule
+\end{tabular}
+\end{table}

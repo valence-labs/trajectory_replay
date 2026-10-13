@@ -1,0 +1,5 @@
+label	path	stage
+cap_s_pretrain	pbmc_split1_pretrain_capacity_sweep/cap_s	pretrain
+cap_l_pretrain	pbmc_split1_pretrain_capacity_sweep/cap_l	pretrain
+cap_xl_pretrain	pbmc_split1_pretrain_capacity_sweep/cap_xl	pretrain
+cap_m_pretrain	pbmc_split1_pretrain	pretrain

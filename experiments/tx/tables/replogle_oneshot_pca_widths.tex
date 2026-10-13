@@ -1,0 +1,55 @@
+\begin{table}[t]
+\centering
+\caption{One-shot CFM on Replogle task-0 PCA at several widths
+(train on all non-test cells of all four lines; eval HepG2 finetune vs
+STATE-test genes; MLP $1024{\times}4$, Adam $10^{-4}$, $\approx 100{,}000$
+updates, batch $1024$, Euler $0.05$, seed $42$).
+The PCA basis is fit on T0 train cells only; genes are read out with the
+tied inverse (no affine).
+Pearson~$\Delta$ is the trainer gene-space scorer with decoded observed
+controls.
+The inverse-PCA oracle decodes \emph{observed} PCs of real cells (no CFM)
+and is the reconstruction ceiling at that width.
+Cell-Eval \texttt{minimal} is available only for $d{=}256$.}
+\label{tab:replogle_oneshot_pca_widths}
+\begin{tabular}{r cc cc cc}
+\toprule
+ & \multicolumn{2}{c}{Oracle Pearson~$\Delta$}
+ & \multicolumn{2}{c}{CFM Pearson~$\Delta$}
+ & \multicolumn{2}{c}{Cell-Eval} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+$d$
+ & $\uparrow$ Fit & $\uparrow$ Heldout
+ & $\uparrow$ Fit & $\uparrow$ Heldout
+ & $\uparrow$ Fit $\Delta$ / L1
+ & $\uparrow$ Heldout $\Delta$ / L1 \\
+\midrule
+50
+ & -- & --
+ & $0.486$ & $0.374$
+ & -- & -- \\
+100
+ & -- & --
+ & $0.458$ & $0.373$
+ & -- & -- \\
+256
+ & $0.713$ & $0.712$
+ & $0.438$ & $0.378$
+ & $0.413$ / $0.806$
+ & $0.375$ / $0.707$ \\
+512
+ & $0.792$ & $0.794$
+ & $0.389$ & $0.352$
+ & -- & -- \\
+1024
+ & $0.891$ & $0.892$
+ & -- & --
+ & -- & -- \\
+\midrule
+256, generated controls
+ & -- & --
+ & $0.438$ & $0.375$
+ & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}

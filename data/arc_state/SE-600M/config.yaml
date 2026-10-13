@@ -1,0 +1,145 @@
+dataset:
+  N: 512
+  P: 512
+  S: 512
+  cellxgene:
+    ds_type: h5ad
+    filter: false
+    num_datasets: 1139
+    train: /large_storage/ctc/userspace/aadduri/data/auxillary/esm_cellxgene_train.csv
+    val: /large_storage/ctc/userspace/aadduri/data/auxillary/esm_cellxgene_val.csv
+  cellxgene-tahoe:
+    ds_type: filtered_h5ad
+    filter: true
+    filter_by_species: null
+    num_datasets: 1139
+    train: /large_storage/ctc/userspace/aadduri/data/auxillary/esm_tahoe_cellxgene_train_filtered.csv
+    val: /large_storage/ctc/userspace/aadduri/data/auxillary/esm_tahoe_cellxgene_val_filtered.csv
+  chrom_token_right_idx: 2
+  cls_token_idx: 3
+  current: scbasecamp-cellxgene-tahoe-filtered
+  name: vci
+  num_cells: 36238464
+  num_train_workers: 32
+  num_val_workers: 8
+  overrides:
+    rpe1_top5000_variable: /large_storage/ctc/datasets/vci/validation/rpe1_top5000_variable.h5ad
+  pad_length: 2048
+  pad_token_idx: 0
+  scbasecamp-cellxgene-tahoe:
+    ds_type: filtered_h5ad
+    filter: true
+    filter_by_species: null
+    num_datasets: 15700
+    train: /large_storage/ctc/userspace/aadduri/data/auxillary/esm_basecount_tahoe_cellxgene_train.csv
+    val: /large_storage/ctc/userspace/aadduri/data/auxillary/esm_basecount_tahoe_cellxgene_val.csv
+  scbasecamp-cellxgene-tahoe-filtered:
+    ds_type: filtered_h5ad
+    filter: true
+    filter_by_species: null
+    num_datasets: 14420
+    train: /large_storage/ctc/userspace/aadduri/data/auxillary/esm_basecount_tahoe_cellxgene_train_filtered.csv
+    val: /large_storage/ctc/userspace/aadduri/data/auxillary/esm_basecount_tahoe_cellxgene_val_filtered.csv
+  seed: 42
+embeddings:
+  current: esm2-cellxgene-basecamp-tahoe
+  esm2-cellxgene:
+    all_embeddings: /large_storage/ctc/userspace/aadduri/data/auxillary/Homo_sapiens.GRCh38.gene_symbol_to_embedding_ESM2.pt
+    ds_emb_mapping: /large_storage/ctc/userspace/aadduri/data/auxillary/esm_cellxgene_ds_mapping.torch
+    num: 19790
+    size: 5120
+    valid_genes_masks: null
+  esm2-cellxgene-basecamp-tahoe:
+    all_embeddings: /large_storage/ctc/userspace/aadduri/data/auxillary/Homo_sapiens.GRCh38.gene_symbol_to_embedding_ESM2.pt
+    # ds_emb_mapping: /home/aadduri/vci_pretrain/gene_embidx_mapping_cross.torch
+    ds_emb_mapping: /large_storage/ctc/userspace/aadduri/data/auxillary/esm_basecount_tahoe_cellxgene_ds_mapping.torch
+    num: 19790
+    size: 5120
+    valid_genes_masks: /large_storage/ctc/userspace/aadduri/data/auxillary/esm_basecount_tahoe_cellxgene_valid_masks.torch
+  esm2-cellxgene-tahoe:
+    all_embeddings: /large_storage/ctc/userspace/aadduri/data/auxillary/Homo_sapiens.GRCh38.gene_symbol_to_embedding_ESM2.pt
+    ds_emb_mapping: /large_storage/ctc/userspace/aadduri/data/auxillary/esm_basecount_tahoe_cellxgene_ds_mapping.torch
+    num: 19790
+    size: 5120
+    valid_genes_masks: /large_storage/ctc/userspace/aadduri/data/auxillary/esm_basecount_tahoe_cellxgene_valid_masks.torch
+experiment:
+  checkpoint:
+    every_n_train_steps: 1000
+    monitor: trainer/train_loss
+    path: /data/checkpoints
+    save_top_k: 4
+  compiled: false
+  ddp_timeout: 3600
+  deaware: false
+  limit_val_batches: 100
+  local: local
+  name: vci_1.5.0_600M_basecount_tahoe_cxg
+  num_epochs: 16
+  num_gpus_per_node: 8
+  num_nodes: 2
+  port: 12400
+  profile:
+    enable_profiler: false
+    max_steps: 110
+    profile_steps:
+    - 10
+    - 100
+  val_check_interval: 1000
+loss:
+  apply_normalization: false
+  kernel: energy
+  name: tabular
+  uniformity: false
+model:
+  batch_size: 48
+  batch_tabular_loss: false
+  counts: true
+  d_hid: 2048
+  dataset_correction: true
+  dropout: 0.1
+  ema: false
+  ema_decay: 0.999
+  ema_update_interval: 1000
+  emsize: 2048
+  name: vci
+  nhead: 16
+  nlayers: 16
+  num_downsample: 1
+  output_dim: 2048
+  rda: true
+  sample_rda: false
+  use_flash_attention: true
+  variable_masking: true
+optimizer:
+  end: 1.0
+  gradient_accumulation_steps: 8
+  max_grad_norm: 0.8
+  max_lr: 1.0e-05
+  reset_lr_on_restart: false
+  start: 0.01
+  weight_decay: 0.01
+  zclip: true
+task:
+  mask: 0.2
+tokenizer:
+  token_dim: 5120
+validations:
+  diff_exp:
+    dataset: /large_storage/ctc/datasets/cellxgene/processed/rpe1_top5000_variable.h5ad
+    dataset_name: rpe1_top5000_variable
+    enable: false
+    eval_interval_multiple: 10
+    method: null
+    obs_filter_label: non-targeting
+    obs_pert_col: gene
+    top_k_rank: 200
+  perturbation:
+    ctrl_label: non-targeting
+    dataset: /large_storage/ctc/datasets/vci/validation/replogle_perturbation.h5ad
+    dataset_name: replogle_perturbation
+    enable: false
+    eval_interval_multiple: 10
+    pert_col: gene
+wandb:
+  enable: true
+  project: vci

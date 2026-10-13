@@ -1,0 +1,7 @@
+{
+    "strategy": "cumulative",
+    "train_batch_size": 256,
+    "eval_batch_size": 64,
+    "epochs": 667,
+    "target_steps_per_experience": 100050
+}

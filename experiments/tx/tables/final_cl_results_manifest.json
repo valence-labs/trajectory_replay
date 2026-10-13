@@ -1,0 +1,1699 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-09-21T14:53:16.120678+00:00",
+  "git_head": "6b06be8ea12ee4f5434c0331c543ebefc7b416ac",
+  "protocol": {
+    "seeds": [
+      42,
+      69,
+      1714
+    ],
+    "final_generated_cells_per_non_control_stratum": 500,
+    "lambda_grid_selection_generated_cells_per_stratum": 200,
+    "predicted_controls": "decoded observed control latents"
+  },
+  "code": {
+    "experiments/tx/train_cl.py": "8bf3248b4dcaac6543ef3941ce277d19abe83ee275a7856a179d063ba2cb4c68",
+    "experiments/tx/eval_cl_celleval.py": "041e77e3b8039a7fabd79e4f5a2b48514916335de2522d9b6d947e5f6e9e740a",
+    "experiments/tx/eval_cl_heldout.py": "d2f2043a12acf19f359b2be884ac846205cd72167bd0c943b881680243c8e9aa",
+    "experiments/tx/audit_final_cl_results.py": "7332c88f2568ccfdc232797ec67d37aef3e22e787825cdb858d6d1b3f287fd65",
+    "experiments/tx/render_final_cl_tables.py": "b7967178e989b6713705f0f8653570db624f5ce36ae341ae9939754c061c7a1b",
+    "src/trajectory_replay/training/flow_matching.py": "49a0ab54412d640ae726f8f05ea9b258ce563744b6f30c994bf12326aff20e88",
+    "src/trajectory_replay/training/mean_flow_cl.py": "9308ee2bc54595d6569529c0512188022066fe7273e08b04cd0ef304b0217d90",
+    "src/trajectory_replay/eval/tx_cl_pearson.py": "da67507cd5cc75e87a7599d69f029cb9c20171028b0780c9aa9e76ee059e5025",
+    "src/trajectory_replay/data/tx_cl_tasks.py": "ec4ac27904d15744af8cfbff016a81ee691288d445279952ad3ea2391baccf65",
+    "src/trajectory_replay/model/backbones.py": "96921798cccbaf30c69fcf0a27531333df525a0435ec1a61aafab98072ab818b",
+    "src/trajectory_replay/model/flow_matching.py": "81b9ebbe425b9922079e54a490e80f417ada67e7a64d73c4b8d32d3b80c96aad",
+    "src/trajectory_replay/model/lora.py": "0b8b85a9850ebcbe41fa50115da56a960fedcf7ed455caa88d3d58b691b4a6ec",
+    "sbatch/tx/train_cl.sbatch": "78a55f9e5c942a251e2ddc73736a8f491c7a9b6d001b2f815dc02390afa2716f",
+    "sbatch/tx/eval_cl_celleval.sbatch": "39cc78d30ba0b8dc265d411af36cf23de2dec94ab00740c45a5ba6d22ed3dd0b",
+    "sbatch/tx/submit_final_pbmc_replay.sh": "9dd495f84fc336aa93295a4982112aa5da54fe222213220332aa947770452fd1",
+    "sbatch/tx/submit_final_pbmc_baselines.sh": "13b9573362700af160a92516d7ab4fb710e0b55d0e41b1dbbe181dd7c80da8a7",
+    "sbatch/tx/submit_final_replogle_replay.sh": "d3109d233a29845e3c2b250285d7f24a871bf81fc4a7206000910cffe893cad7",
+    "sbatch/tx/submit_final_replogle_baselines.sh": "98334bd8d223ec79fd4d11ec50d52309140fc665c4cfc8cd04770126a6182d55"
+  },
+  "artifacts": {
+    "pbmc": {
+      "table": {
+        "path": "experiments/tx/tables/pbmc_cl_pearson_pca100.tex",
+        "sha256": "c1f96b259736eb17faffb6384f00e2c2b30d6bb5014c28d56aa21fcb2741bbee"
+      },
+      "plot_script": {
+        "path": "experiments/tx/plot_pbmc_cl_fit_retention_heldout.py",
+        "sha256": "61a7df3a3d9db318451935ae664ffc713156528b330df017146bea1446000230"
+      },
+      "plot_image": {
+        "path": "experiments/tx/tables/pbmc_cl_pca100_fit_retention_heldout.png",
+        "sha256": "506fb4c096ce8f7348301831a638bded4385c85d89de4938260a689be99a579e"
+      },
+      "decoder_manifest": {
+        "path": "results_dir/tx_results/pbmc/decoders_pca100_affine/manifest.json",
+        "sha256": "097f2a6102eba6836933b9ddde008039faee6a1eab8abfbd1844b3449eb94385"
+      }
+    },
+    "replogle": {
+      "table": {
+        "path": "experiments/tx/tables/replogle_cl_pearson_pca50.tex",
+        "sha256": "8526be4d9de22bee8a5c80595145f46c2f1cc1779629d0fe1dc572d8228a4747"
+      },
+      "plot_script": {
+        "path": "experiments/tx/plot_replogle_cl_fit_retention_heldout.py",
+        "sha256": "7b72285bf9791edf9e941311b97f0299c0cca453f3e90305cb9f2d4c40998e75"
+      },
+      "plot_image": {
+        "path": "experiments/tx/tables/replogle_cl_pca50_fit_retention_heldout.png",
+        "sha256": "ce9e6b69ac94847665f1fed1e3790b3cf17ba7e19f6408e74681fa482710da39"
+      },
+      "decoder_manifest": {
+        "path": "results_dir/tx_results/replogle/decoders_pca50_affine/manifest.json",
+        "sha256": "93f488598f69836b0880c236706de133a7718f456cf8e0cc14741b305cb45757"
+      }
+    }
+  },
+  "runs": {
+    "pbmc": [
+      {
+        "method": "Naive ($vf{=}0$, $pert{=}0$, $ctx{=}0$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_embedding_p0c0_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "fc8e325520f67f1a96c840a9d0e31f792ef76413fa682d58d37ced4cc7f01ed5",
+          "final_metrics.json": "ee25cb5b7d58a9c2afd01e52a239faa4578bc576fa709f9fd002ad9764c86838",
+          "cell_eval_minimal_stream_heldout.json": "bae5a1ea09b8b76aa067ceb593bfa86287a50ae6bcf76c6cf1611c941a186715"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}0$, $pert{=}0$, $ctx{=}0$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_embedding_p0c0_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "72f5c631a0a2b39066579c2ea5fdb1c83ee56b0b2d1810e8b3c6b2d37b6249dc",
+          "final_metrics.json": "fb1ad314cd05233e758333c6aaaa35c8d057599b446fab077b67d4cfb6ee29b5",
+          "cell_eval_minimal_stream_heldout.json": "3d0bb2365982b6deb872ae7acb63e36849f77e600d702bde85b7e968495dd8f5"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}0$, $pert{=}0$, $ctx{=}0$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_embedding_p0c0_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "8001865a582b388af12abbea6e8bbc6fe88f037bb08c781d3b20b35432160373",
+          "final_metrics.json": "877f9532491b9db8609c9e6747790cc84cea3c35628d1249384d4d2fd62ddf55",
+          "cell_eval_minimal_stream_heldout.json": "a9072c419bb75a320e5a8439494b79f3fb7d2bfbee0b2a40536d52d80e263431"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}0$, $pert{=}1$, $ctx{=}1$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_embedding_p1c1_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "ed5dded7b6f5e49abaf2b84d5826670ea1db71feb15b9c371d935204f1532c9f",
+          "final_metrics.json": "349db79cee48048dca3e985a0477798fb7b8c9173323a956e69b8f5e9ad42fa2",
+          "cell_eval_minimal_stream_heldout.json": "3c8f51baed85b36ea16221a6a00942198aa859d3ed489f4d6566874de604e76b"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}0$, $pert{=}1$, $ctx{=}1$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_embedding_p1c1_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "c42a9062a3bc94cbebf7153cadfe9b6d479b41aa4c19e99b00d2c1bfd0a44422",
+          "final_metrics.json": "b3779ac594fa9d0fcf09e60236fa493e584e70e2bf7df3b7f42112f406ed9846",
+          "cell_eval_minimal_stream_heldout.json": "43877f15dbb8bcea51d804df71a731fd3eb957699bec22d682df2a51009f2db2"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}0$, $pert{=}1$, $ctx{=}1$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_embedding_p1c1_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "9875d2839088de86d46f4d0835dde91e10767d09ade8e2181671321efdbe883d",
+          "final_metrics.json": "08825c2bca480edf95121c92ac882b7236872ec0280f355249373bc5c120c7c4",
+          "cell_eval_minimal_stream_heldout.json": "dd32ccf3235851fcf1b0acd1a5fba32e0ff10fc7f846178965e209abaa919d4c"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}0$, $ctx{=}0$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_p0c0_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "48ed9a6f13631eb3a45a294bc94218647bf75773e71245e241a46ba685f4bff0",
+          "final_metrics.json": "393179723bd803cfcd538dd0b1d2aa1034fa0091fbf35d746f737b5e531dfc66",
+          "cell_eval_minimal_stream_heldout.json": "4c1593e76862132436bee074aab69e61769388ed9d12fd7672e27ff818f753b7"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}0$, $ctx{=}0$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_p0c0_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "7f7acc93ecd808a1780c41c6463cdc1b85d32a8c28dfcab9325c3132aaa632f7",
+          "final_metrics.json": "b998e9f8ea19f7e181e2eac484a9e3814a6b1c7942f8cde52a235ed60f7dd3ae",
+          "cell_eval_minimal_stream_heldout.json": "aff63b91ccba3bc24a8b11dbff8f5b4478151e64cf258b56d40e170aa18189b9"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}0$, $ctx{=}0$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_p0c0_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "114a42bdf15e724509c709128ed8b4942fb0f16d239730e958369d1c15428454",
+          "final_metrics.json": "4bf5f2c15b753986991faf4209030d9bf0a34a5533901c0352d89768be203310",
+          "cell_eval_minimal_stream_heldout.json": "5bb63e0180269fbcfd6b0e1fade68f3a464cedc9d43ce1ee92b9864fc746ae39"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}0$, $ctx{=}1$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_p0c1_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "8cee82bc40b8b1813c70f9a844a9aab7b22804f5164e029fab4fca903bdd1560",
+          "final_metrics.json": "393179723bd803cfcd538dd0b1d2aa1034fa0091fbf35d746f737b5e531dfc66",
+          "cell_eval_minimal_stream_heldout.json": "4c1593e76862132436bee074aab69e61769388ed9d12fd7672e27ff818f753b7"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}0$, $ctx{=}1$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_p0c1_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "05334cd9cfdc7bec23a1672e2765bfb08e628ac651c13828392401410f2cc679",
+          "final_metrics.json": "b998e9f8ea19f7e181e2eac484a9e3814a6b1c7942f8cde52a235ed60f7dd3ae",
+          "cell_eval_minimal_stream_heldout.json": "aff63b91ccba3bc24a8b11dbff8f5b4478151e64cf258b56d40e170aa18189b9"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}0$, $ctx{=}1$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_p0c1_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "c609ccaab2e58635565dcb06e6c744a0c1efeaf176964fb9d9b9a651e6b92c26",
+          "final_metrics.json": "4bf5f2c15b753986991faf4209030d9bf0a34a5533901c0352d89768be203310",
+          "cell_eval_minimal_stream_heldout.json": "5bb63e0180269fbcfd6b0e1fade68f3a464cedc9d43ce1ee92b9864fc746ae39"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}1$, $ctx{=}0$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_p1c0_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "56397d94b4fd894cbf58bea799ad8af173ecfd362fa82d4869647073350a66f5",
+          "final_metrics.json": "d1d87cd169650be367aeb3e8a89071c8df61d4bca0fb6e2cd99bb454845229d4",
+          "cell_eval_minimal_stream_heldout.json": "13ede8fba2a9bce4be3a974e9b61397dbd08205b773dd1adbe2051203ed14af4"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}1$, $ctx{=}0$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_p1c0_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "006cb968f59f18879eb2f6faba935f17f3b8d2c2bd74c962d1ddf781d36f742b",
+          "final_metrics.json": "bb69d5ed0c7295f123ded255e8b2f24ee37509d7bc609759a5d36b4998297699",
+          "cell_eval_minimal_stream_heldout.json": "9accda13f4d43465bf36523003d0aff4a751263ddedfa9d9424d7b2bf4c27060"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}1$, $ctx{=}0$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_p1c0_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "ee4bd5132d45cdd197b7273831bd558ccaa77cf500c00899c40fbbb3f8fbeaa2",
+          "final_metrics.json": "3ded8e403a943a1f55b890c355b5918c683902db5be6419f6df59f9454969008",
+          "cell_eval_minimal_stream_heldout.json": "89f1d1a23ae87e4352cca23a168b77fe5cc8f4f9cca80f46edb4258d26113a5d"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}1$, $ctx{=}1$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_p1c1_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "8923ece8da3cd13902b277322b1e6e81f0a9f80a5b4ab7c4d5bf39a241f1b0be",
+          "final_metrics.json": "d1d87cd169650be367aeb3e8a89071c8df61d4bca0fb6e2cd99bb454845229d4",
+          "cell_eval_minimal_stream_heldout.json": "13ede8fba2a9bce4be3a974e9b61397dbd08205b773dd1adbe2051203ed14af4"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}1$, $ctx{=}1$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_p1c1_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "a82ec5b7e0dc2f6301c36fd133cb5d49e82606bb0f54c4d76e9222d01de6bc65",
+          "final_metrics.json": "bb69d5ed0c7295f123ded255e8b2f24ee37509d7bc609759a5d36b4998297699",
+          "cell_eval_minimal_stream_heldout.json": "9accda13f4d43465bf36523003d0aff4a751263ddedfa9d9424d7b2bf4c27060"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}1$, $ctx{=}1$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_p1c1_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "cc7fa00e8474267720901da48fdcd63f723ea40650c31638a30dee0095321b07",
+          "final_metrics.json": "3ded8e403a943a1f55b890c355b5918c683902db5be6419f6df59f9454969008",
+          "cell_eval_minimal_stream_heldout.json": "89f1d1a23ae87e4352cca23a168b77fe5cc8f4f9cca80f46edb4258d26113a5d"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}4$, $\\alpha{=}8$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_lora_r4_p0c0_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "614805f50c2bd76b8794da6ae138195ab4c83ffbf5b38047199e14856547a02a",
+          "final_metrics.json": "aefed4cf601987aa6c7a1896adf368471914e2841157f8b4cd940de198d45688",
+          "cell_eval_minimal_stream_heldout.json": "e1eb159e5be0033f271092f815a6d6d1bde978180da7bd8b3c898005c721f5ca"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}4$, $\\alpha{=}8$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_lora_r4_p0c0_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "3ac3a485f72de102bdeca6a7a2c9f7cc3c0017ac3f5ea06de942ef0753e84f70",
+          "final_metrics.json": "e99e5ee0bbb6e6ed539caae388fbdb6c3efe5951885e0317052c2008cf0c9503",
+          "cell_eval_minimal_stream_heldout.json": "1e2352a62bacbd029cd4dd1ef4f61ad13df3c83bc3753eb6daa7899d46189ff7"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}4$, $\\alpha{=}8$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_lora_r4_p0c0_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "c5b7a8eb34db6180139214e003bd75c12922f6a5085561132d0f131a44c27a22",
+          "final_metrics.json": "7756ea52a52385e6554c10286c6a253125ab62d6515aa5bba6dd0ef7661b9024",
+          "cell_eval_minimal_stream_heldout.json": "cae7ce3ad5afcacb52f5b5c3177d5d73c57b67312e3f459e6ce2934737b4d4a5"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}8$, $\\alpha{=}16$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_lora_r8_p0c0_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "65437447a99d592c8bf9cc892da3b1cf7da2d993c92dba7cb1d92e53e11880f3",
+          "final_metrics.json": "50f7fe179830f7a3fe81375ee004ac4a69765327ba537238465f804c729de7d0",
+          "cell_eval_minimal_stream_heldout.json": "446b197f6545f0c59cc68ba8aca2f4be6152e618fe8a7d5bb5e16660b8c29461"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}8$, $\\alpha{=}16$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_lora_r8_p0c0_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "f55c5726bf32b1c96376adb87a9688d2dd22f27b012e37447a1277179f78812e",
+          "final_metrics.json": "f2d3291071f86bd3a85a423f9583ae1848bad50b1e3b9110ff886f2c6530ca17",
+          "cell_eval_minimal_stream_heldout.json": "88e5ee43f9c1c33649cfee3ee2a8d9dc10c431e832fbb3adc7bc7d02a70990de"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}8$, $\\alpha{=}16$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_lora_r8_p0c0_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "f8cbe32bb00be9ec8a957718d6407ecfdda824f8a4e6d9e3f4c267dc658cd826",
+          "final_metrics.json": "966719fe7379965256b376515e83245f1a150b32507180342face22af77a474f",
+          "cell_eval_minimal_stream_heldout.json": "23059f784ab82e3334e7522cf7c69a48c7b8fac7e1a9a29d398f28f0f55b03f7"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}16$, $\\alpha{=}32$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_lora_r16_p0c0_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "288df939c92ec7e9f5663db3ba7ec3c512e1266780e7f3e77aa0ab605694756b",
+          "final_metrics.json": "1714bbaf9dea5772e966a55d022c25b8c731d38dd018895548abefcc7d39815e",
+          "cell_eval_minimal_stream_heldout.json": "2108c0e2ae8d71dee98b34955f4c4c23693667ad0bdbd6fed13ad98055d09ce3"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}16$, $\\alpha{=}32$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_lora_r16_p0c0_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "5c2be8bb32e9ae120a3eb4835c29c7397f19f2055e6eafee3474e9bf33973b78",
+          "final_metrics.json": "229a3dd70213777cf7bb91c1e08cbe519239811ae02762e5cc11f6e7559d04ae",
+          "cell_eval_minimal_stream_heldout.json": "aaece4284d9ed3641b27aabd5c1b1f7a05e8303a7ba8b052cf1fb24b29b4969e"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}16$, $\\alpha{=}32$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_lora_r16_p0c0_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "3c2883da8c5d0e775759768a93fc41d048b61e7e8a33452b93d21f9905a013be",
+          "final_metrics.json": "d8eb3c133b4b29a6d9559121b6ca904141ac07a05b826093b13c47e914ed4ab2",
+          "cell_eval_minimal_stream_heldout.json": "58c28c265a4bdd03861dde5710c840c5af544c7d4dc8034540e79b16577437eb"
+        }
+      },
+      {
+        "method": "GFT (sigmoid, $vf{=}1$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/gft_pca100_sigmoid_p0c0_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "83fa007341f8620f0d5c7d0575eed7a78ba454d906f54e327893f6f7dc463ba2",
+          "final_metrics.json": "6ba24c3bbbc99c73d039dfb257441add0aa52133959dbbd8367de076d2e1fcea",
+          "cell_eval_minimal_stream_heldout.json": "de2d4070122db353e1bba9ee81971ec37edc24bd269e3ed31ed2e4f89706c00f"
+        }
+      },
+      {
+        "method": "GFT (sigmoid, $vf{=}1$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/gft_pca100_sigmoid_p0c0_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "d002c5b30026352754eaa617852a67369ecf9404f275795c2dd5a74687f85d39",
+          "final_metrics.json": "6dcc303f7d5746baa2752b3291874e8c657aa572bccc493337bb42a1ac9d3524",
+          "cell_eval_minimal_stream_heldout.json": "65a47a11530eda89903365552ca4fbbfd4942b6082d65e17df6d3e0cb354805a"
+        }
+      },
+      {
+        "method": "GFT (sigmoid, $vf{=}1$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/gft_pca100_sigmoid_p0c0_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "454496367488a7a18bac3da5ed280a2c045fea14d07cc4daf3c87d097bfe6909",
+          "final_metrics.json": "c9ea9a549ac24c46f40dadaf2125fd6051d439a847c510342090a39ca94da74f",
+          "cell_eval_minimal_stream_heldout.json": "36bea119cc582c9733d05545ed0faaa2513afe4febe4834409612ced1472bc9e"
+        }
+      },
+      {
+        "method": "GFT (linear, $vf{=}1$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/gft_pca100_linear_p0c0_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "1a4c03e56868ab16edecae2ce11f88b6baf86e8fe0c5c2fe1ad689441fc94047",
+          "final_metrics.json": "7f849ad9017ed431c7639eeec565c6099459a51a9bcac69d2103c733bdc93a17",
+          "cell_eval_minimal_stream_heldout.json": "80be5b76b9ae997b687013c0533b29653a4a598857e846fdccb643aa9b4ee68c"
+        }
+      },
+      {
+        "method": "GFT (linear, $vf{=}1$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/gft_pca100_linear_p0c0_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "39e8e65667b15bf2ce8737d3aeee2ad58e1e90f314839f9b4e76860f1412261d",
+          "final_metrics.json": "9162f9b1102eadad70c205494cc02a6c9524264c4656ce3d4555bf86f25472d7",
+          "cell_eval_minimal_stream_heldout.json": "f1701f391f4ce5f664c918d2b1b679dae7cd4e13f5f2a248f46f32f33ece8280"
+        }
+      },
+      {
+        "method": "GFT (linear, $vf{=}1$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/gft_pca100_linear_p0c0_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "e28642a64f29767747499526dabd31a40e2c664f180e3b526332a7d76ad3a1cf",
+          "final_metrics.json": "e1606f570c3ed08a1a78b809ee4d5c15e28e4dc6b517533db703fcc267e5bdf8",
+          "cell_eval_minimal_stream_heldout.json": "f3de8e7ffcdeb5a7848c86f71c131eaa399927a463689cb055b9e6b42b2b23ba"
+        }
+      },
+      {
+        "method": "Two-stage (10\\% new ctx $\\to$ $vf{=}1$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_tsf0.1_p0c0_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "86ac839e847099d9cfab239ea1bd25e918a1af17fdc21e6a9e5bcff144b1cdd0",
+          "final_metrics.json": "3ea540597af33dcb257dfb7870d89a47d56bc5986f69f22bdb4cb7bd27084085",
+          "cell_eval_minimal_stream_heldout.json": "6ac4e154344512cfd5bdd514034efeba3b0afc4e84768940fc304cae5c90ce60"
+        }
+      },
+      {
+        "method": "Two-stage (10\\% new ctx $\\to$ $vf{=}1$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_tsf0.1_p0c0_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "4cd3c83a10bc247ea645c415887fd2bd9207d772c12b28a95d7bfee614edccfc",
+          "final_metrics.json": "f4080afe38c59bbe464b518947f5aed1a34d40e0b9394aa2a4229c6e800bd7ac",
+          "cell_eval_minimal_stream_heldout.json": "ccc70594bab867d85342261fbd2e83ef6369a55066ef99a90018e5fe788a41b4"
+        }
+      },
+      {
+        "method": "Two-stage (10\\% new ctx $\\to$ $vf{=}1$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_tsf0.1_p0c0_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "ad37eb3407bf7ba7e31af440f0d38652076b484c4804976a3293353f2b9b965c",
+          "final_metrics.json": "267e5a4f239485a16b9ad71f8587e413c6512571dc85711136d85e957c7649fa",
+          "cell_eval_minimal_stream_heldout.json": "ab80604146d480861d2d2c83197892e2638d01417a81670eabb67ef869e61699"
+        }
+      },
+      {
+        "method": "Two-stage (50\\% new ctx $\\to$ $vf{=}1$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_tsf0.5_p0c0_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "38307ab6c5b2bc6dd8ea6ef0ba699972553e612af1cae04947800b0861993ebb",
+          "final_metrics.json": "f20c005700774eb0e8604c5891b900be175a8e8aac96eaee3a5f3ccaaa6a86cd",
+          "cell_eval_minimal_stream_heldout.json": "f0bdeff71f19422689c1a195710810a9e9db7177e80633c1b1513db87d92f73f"
+        }
+      },
+      {
+        "method": "Two-stage (50\\% new ctx $\\to$ $vf{=}1$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_tsf0.5_p0c0_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "6a1c2449255ecb772ada6e00352518ed55a94bf66db264591b520b0c213acec4",
+          "final_metrics.json": "5d2b0de5babf9e1baa589a82c022029c7c8dbf7962981ab6bc9d169276c8b0fb",
+          "cell_eval_minimal_stream_heldout.json": "7a83ef5498c962d87f55e2e74ad83a4179e8a1fdaa142fd46eae0062f24b3c96"
+        }
+      },
+      {
+        "method": "Two-stage (50\\% new ctx $\\to$ $vf{=}1$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/standard_pca100_tsf0.5_p0c0_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "fbfa656b07266d8ffc84d0854596b7db1db7f99bc9e769c3cc77ec23f844c247",
+          "final_metrics.json": "f5fe5ca689290b1e99806a2236083470fdc3e60920144fae8f60af9cc691dc15",
+          "cell_eval_minimal_stream_heldout.json": "86d77f6e4d0ee69376077b3c0f044ad864079b2d5367237b0cd9f36d87a1991f"
+        }
+      },
+      {
+        "method": "Real replay ($\\lambda$-grid)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/real_pca100_grid_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "5059389fb4db67a671b3f15aae9f9faf4e706da58ca0787cd15a1300afef65a1",
+          "final_metrics.json": "131fcee7b7f233262ead86d3de054aa0f58105b584b35a53bdab364d949a6d9b",
+          "cell_eval_minimal_stream_heldout.json": "ffa2305ca4506b21e4646aff03fd6d66b24287d4948b2d607e626dac478326ab"
+        }
+      },
+      {
+        "method": "Real replay ($\\lambda$-grid)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/real_pca100_grid_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "bfbddc76fe3f070658d4d6f08e2e0e56c8697502f50ae26f4bf32d6fc52cbee3",
+          "final_metrics.json": "697a3662314830b852800a87e5359363dd36cdea1df7a8625193a3daaf6e279e",
+          "cell_eval_minimal_stream_heldout.json": "4b75159062702186e013d8bf2335dc95d19974e87de8a0f093c24ed83b58d991"
+        }
+      },
+      {
+        "method": "Real replay ($\\lambda$-grid)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/real_pca100_grid_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "68f1ea25742dd47ec644fb10d4e88e0d7dfc2422b0f78da273997e4bc0a9fa02",
+          "final_metrics.json": "962095d24f843c12c1a8845c2e5983851b1687f5c9e6de01297eef470ee488cd",
+          "cell_eval_minimal_stream_heldout.json": "7cf70b8f4d20c4fc1f0a1678cfd031c5afc6a1a3452f61ea4b4d4655af2e709a"
+        }
+      },
+      {
+        "method": "Real replay ($\\lambda$-equal)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/real_pca100_equal_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "a893a83a3e91869310b493fd147a2f8ec5a4a3d167eb3212650fa232f3f5157e",
+          "final_metrics.json": "a0cd5d1ea6f21b429775b6902348378f7e47eb131ef361e974a0851dee64e8e4",
+          "cell_eval_minimal_stream_heldout.json": "54b242e8bff32579624649ac5aa050c2f44ddc805d09fbebab1989ac1180ad2f"
+        }
+      },
+      {
+        "method": "Real replay ($\\lambda$-equal)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/real_pca100_equal_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "7f913e16a03e138d695089dc1f1c222ed5d6a4eeaf2c384cfdf5815505f22a09",
+          "final_metrics.json": "34aec8303826ab931d99c0499f9dbe79b1df1ca4056d79cfe3ad8b11d1e07d48",
+          "cell_eval_minimal_stream_heldout.json": "2ad2811dd8d2320950755d58586b4ae995b76d9ff1612c8e7ee35dd228d7f1e2"
+        }
+      },
+      {
+        "method": "Real replay ($\\lambda$-equal)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/real_pca100_equal_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "44986a2499e801b4d2376648a95a023f00908e02bb4da4501a9f4482740268c9",
+          "final_metrics.json": "55bd2542c9c8bc5fa52714f9efb4a62226d5b97aebd99ead1be2666fcb69c146",
+          "cell_eval_minimal_stream_heldout.json": "22139ec54c7e5ae30baf9a792ff6164177f36705cf7b12a11c8cdfbb7f03ec51"
+        }
+      },
+      {
+        "method": "Generative replay (ODE, $\\lambda$-grid)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_ode_grid_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "847f0ff7090b9bd4da9526101f4b9c25d270fafa4dd736800bfb25eec49960f8",
+          "final_metrics.json": "0564a25360ba5a38ba997ca75979deda7a4d3079b85ca346eaa350a01ad29762",
+          "cell_eval_minimal_stream_heldout.json": "245dc14d81854a06c3f40a34a77f553cf4fc619fc92197324974c7d403acd3c8"
+        }
+      },
+      {
+        "method": "Generative replay (ODE, $\\lambda$-grid)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_ode_grid_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "d5bf9702f2cab77325ae8d56ec929c46a18d082ab9417b96b1befce65834b528",
+          "final_metrics.json": "6d8faccc85d9992adb16727d66fa2a40335d64bac6d1fa8bc93b8ff50de10772",
+          "cell_eval_minimal_stream_heldout.json": "9b3cb87de022644114c36244525dc62ac10f9fca167f2f3a82f812a0d86e18c7"
+        }
+      },
+      {
+        "method": "Generative replay (ODE, $\\lambda$-grid)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_ode_grid_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "251cbdc693cc7d4a27fdbced21f6b245845b030e649c0329ba994012fb60ff1b",
+          "final_metrics.json": "7b819f955eaa2131172681a111f191242b941f2e1168657219b33555af5d83de",
+          "cell_eval_minimal_stream_heldout.json": "abc67aefbd2387dec0d0ccdee0162d7ac911840a21f280fee81e7d210dcaf29e"
+        }
+      },
+      {
+        "method": "Generative replay (ODE, $\\lambda$-equal)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_ode_equal_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "feb679e408b44f06803c2cb5d6c0bed5033101d64f33faa5be5f6797a440c5cf",
+          "final_metrics.json": "c35371bb6e63d1ff2a4254826bdac3fa46007681764c4ba84bcc9718d09168f1",
+          "cell_eval_minimal_stream_heldout.json": "78b2fd5c83410cd012b142e47372d9f0dfb9b2f26df6ceddd4c7d38330abaaa2"
+        }
+      },
+      {
+        "method": "Generative replay (ODE, $\\lambda$-equal)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_ode_equal_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "b0db15baed48751b74c1ebc27c91beb072c0b33874466618463fee6f5979ab17",
+          "final_metrics.json": "ebf444154842a7988541e838ea64412a90d57a341401cedd8aee9caec06c1241",
+          "cell_eval_minimal_stream_heldout.json": "17eb85f2e51115a416bcac37724fb94cbe5c07268ef8de171b2c11144d24b6fa"
+        }
+      },
+      {
+        "method": "Generative replay (ODE, $\\lambda$-equal)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_ode_equal_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "d5faefd7c6c02579cfaae44972f9367bbe1fde2ca4f5b922b9216bafbda07249",
+          "final_metrics.json": "c9549353e256e213b4d7fe677b01bb88b3f75e8736b4bb253e48c912c5ae44fc",
+          "cell_eval_minimal_stream_heldout.json": "e1a7b1e8de112f8730ab89f69ceaa0e67ed201e525d29d14803d461169b6316b"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}1$, $\\lambda$-grid)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_mf_n1_grid_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "1b8a3227b247af9c6e8cc57bd2422cffc75ab9949481be7aaf5c3729b973d85a",
+          "final_metrics.json": "a6a1c8fd4ffb7bbda57397a910ac4471678308d5e468a4f1c04bdd006c35f052",
+          "cell_eval_minimal_stream_heldout.json": "8e521605d516f5522605ec5b2db3b2bd674d7eb55bb48fde1cf6b03a5580d0d6"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}1$, $\\lambda$-grid)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_mf_n1_grid_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "03f5ba1120c4355989281e85227ad4556b6b2fd48840d3d1f263144f63b2b2ba",
+          "final_metrics.json": "af0ddbc304f278af96da1bb7dd570ac904c290c6480bd83929dbde9ebaab1ffe",
+          "cell_eval_minimal_stream_heldout.json": "9102e995c5173d816378e8b1029f678cd3bb0251313a7d61ca2329b345650746"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}1$, $\\lambda$-grid)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_mf_n1_grid_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "2f3e2f541a5deb975a7597654aa903dd89752b5ed0510be28a0d1e5e2ed8a4f7",
+          "final_metrics.json": "1e66612debde7f3a324c0802bccf5c46f74ce813591c228a6c3b92a8e8c4b4a1",
+          "cell_eval_minimal_stream_heldout.json": "35ae2915d4dd5e8493c8337b8e8d54d635bd2e7dfe88663802a7b44ac42cd6f6"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}1$, $\\lambda$-equal)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_mf_n1_equal_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "9ddf5d4eea684c463da1fc3cc32deb0fba52bdbe5ee6af49ee674d45d2acc5e0",
+          "final_metrics.json": "1fba48e4fefbfbd60941f7df35708ff84c6061dac8ac689b491d4a69d1d96500",
+          "cell_eval_minimal_stream_heldout.json": "cd6481c0a3d70f6f6fd8fe493d96d11f6799ced30123c254cd933bc415c7b7fb"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}1$, $\\lambda$-equal)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_mf_n1_equal_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "509de60c9072d46fda83adee5dc3b5ecfede397303aa65022642235248a20d5b",
+          "final_metrics.json": "7dd8c7d8f7adb93615ef8feb11a8eeb101b3920fbd8e1cc12f0f4f7d7fd2c733",
+          "cell_eval_minimal_stream_heldout.json": "abd3670c2fc75ebc98fb937c0451ccde0b3c6ceb6a824e2032c9ac15690fa948"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}1$, $\\lambda$-equal)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_mf_n1_equal_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "2603a7f68b5dd381c30761f0938ea8539ba4d618ed07abcb9dfbf64386f1c0ff",
+          "final_metrics.json": "f0138d977d237a5f1f96b93391ef3c76e3cb4dd6233030c80c73f00e26ee7913",
+          "cell_eval_minimal_stream_heldout.json": "ed6aa0ea659334d472131faf1fd310187e9a8e69fbd494ead66c06ec7b7ba7aa"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}4$, $\\lambda$-grid)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_mf_n4_grid_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "f2ffea2e039077e3b6e4789cfd7bda20c10affd9753acbd52afd10c70f45f999",
+          "final_metrics.json": "cddf2962fba8516eefcb59e417777f47d43df4bcc8b97241770bd9de8026826f",
+          "cell_eval_minimal_stream_heldout.json": "6e73a3bff8802567741e79a91267f6632f9f3b6bc29e0976b0b840d45ef78ac6"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}4$, $\\lambda$-grid)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_mf_n4_grid_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "5f22b3f952deb10009fb5f24670b25cd55ab0efa3dd6906c0bb028c3db1c3983",
+          "final_metrics.json": "86d4686a6e13508ea0125d403b40b85f293fcdc604e4a794c95a3daab13456b1",
+          "cell_eval_minimal_stream_heldout.json": "1d874a5d71800da76c04179875e9b1fc98a98fe25417c2a8664e944e68ccd70f"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}4$, $\\lambda$-grid)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_mf_n4_grid_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "660414fb7369550331a4b7d10ed09c79866c2db599750132d181825b633807ef",
+          "final_metrics.json": "eaf5f20f5b96964df76a25a2531cb974a760f22e6c1ed38d2cd900f10fb8696e",
+          "cell_eval_minimal_stream_heldout.json": "033fc8a09bd9ed19d0648144c95045081cf9ab5d67cbba2ef31474938fb26aab"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}4$, $\\lambda$-equal)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_mf_n4_equal_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "8a10e0b3f1d9c0e033de926c4d39ced7cdeb402917c89e000132bf1acb8b1186",
+          "final_metrics.json": "200a9226c44827711cf0c04bb5b79eb4580f5dc0d324c6c492e8170be07a7979",
+          "cell_eval_minimal_stream_heldout.json": "3e7e2109e5343476d9a99480e096e6eb6e269de1539bac0338b931572858b0a4"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}4$, $\\lambda$-equal)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_mf_n4_equal_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "3542575117e6fccc6c5e4e50a3f0fac99760ee4dc1f639b2ec5a1904c8bd9923",
+          "final_metrics.json": "88c32248ea7c2f964a1e2d0752a478b78a662e3bd2faeaf32d13a776bb2fe583",
+          "cell_eval_minimal_stream_heldout.json": "46a4b14ff33431ec7546e2ba512fb3db8a28a93627048680a3e42582617a7d00"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}4$, $\\lambda$-equal)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/generative_pca100_mf_n4_equal_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "4186f26bef76dc1c2dbb066675095c2890deca84f576f3f6c05155e9633526d6",
+          "final_metrics.json": "0fb1c4d19ec1c8e06aaea1e47ec35f90801f8a8b4007a8864a01d62780847e2e",
+          "cell_eval_minimal_stream_heldout.json": "0a2d2c45f040927b0e53a2d2e54266263c4e4249eb04a7eaff123233613bf469"
+        }
+      },
+      {
+        "method": "Trajectory replay (ODE, $\\lambda$-grid)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_ode_grid_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "d1d55f4b6956c36c871973160c98da32f053fedbd7042a073bb09debc7d92f80",
+          "final_metrics.json": "16bb54129429d912a84da10608fba58d9f019d4b5fa5c64bab044b463bbab5c0",
+          "cell_eval_minimal_stream_heldout.json": "f67e62fc5bb72144c805c4ccbcd54077d409076ccd722e7b5bfeffbfa0b8f600"
+        }
+      },
+      {
+        "method": "Trajectory replay (ODE, $\\lambda$-grid)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_ode_grid_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "6e009dc631e41675661969fd0b3ff9e131c8ab5fe7c4a54aab6d034f94607ba0",
+          "final_metrics.json": "2ef646f244f0332b4ce820b08f51a6112358e14d89547ff21b0e0121053df3be",
+          "cell_eval_minimal_stream_heldout.json": "bae05e1f2336d197a43a85972df3a92b67778e01f1a2d8572e4a50d9dbbb81f5"
+        }
+      },
+      {
+        "method": "Trajectory replay (ODE, $\\lambda$-grid)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_ode_grid_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "1d661d6e9c7cecd7fdbabe03ad93ae08370aa8254ae807be076dc29936623551",
+          "final_metrics.json": "884d5422ccab238615c1941d7a614a270b258839d37f5dd1239a50974c1f9e09",
+          "cell_eval_minimal_stream_heldout.json": "745db062e85edad57cd5e2fe8e8b944d68d94fb1d7692f651773b98961cad788"
+        }
+      },
+      {
+        "method": "Trajectory replay (ODE, $\\lambda$-equal)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_ode_equal_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "d9e9f5f43b2a0cfc74835fe79f87c2a7f943385eca83dd229ff602de07781f60",
+          "final_metrics.json": "069245141af01c62f5031e78583d68ca1193e0ff91e270893cdf1b13ea216dff",
+          "cell_eval_minimal_stream_heldout.json": "5915038cd1024cfc795d85e33d2c0e63801c4a641ef14f50e90d2229a534cbc4"
+        }
+      },
+      {
+        "method": "Trajectory replay (ODE, $\\lambda$-equal)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_ode_equal_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "933c993048debadf4e5065bc112161d64d09d30039f8933f267dbe5af430fa5e",
+          "final_metrics.json": "c6e4e6a3dc19acef3fdfd27bbf0b367c97ffe34cfdd0c9b80e4a390613659a51",
+          "cell_eval_minimal_stream_heldout.json": "356b8e00b12b9063e2d307ca73811076fc97cf2bf7de23b12e6d651bcfd59401"
+        }
+      },
+      {
+        "method": "Trajectory replay (ODE, $\\lambda$-equal)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_ode_equal_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "1a2d6431b95a2a714ea2ed97ce3aa7a14464f09cb5f0fe0c47c483f828d00677",
+          "final_metrics.json": "59338318deda409c3ecb46a5d35c61cb0ff04d833b933e1fdf8e1c691099cac2",
+          "cell_eval_minimal_stream_heldout.json": "d577dfa9d9051283655b26c962a007e091a00a980cac266248dce0f50397de39"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}1$, $\\lambda$-grid)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_mf_n1_grid_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "32547b3c4298cb085abcba2832abb64ab8453183314a56e8dfaf1a0d8aee73eb",
+          "final_metrics.json": "2d0ea6c80db426c2f4ca14ea0ead01227dfbbada55e9f1a6cac195f0c32e9c1a",
+          "cell_eval_minimal_stream_heldout.json": "c041dd3b0092d5c3fc6a5dba61aea8ea8055778e06502f1c9c05a4599ccf8370"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}1$, $\\lambda$-grid)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_mf_n1_grid_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "86de44c6d149e9ccd947daa1433e168c6646aec9dbebb27a0e1cf1187d2ce8aa",
+          "final_metrics.json": "d9bbe1875fd668f7784c861a27055d69c0c3faa3b2c9deae02bd3b1b7af4be4f",
+          "cell_eval_minimal_stream_heldout.json": "270b07b9dc805545d5b013409a63fb30524f3edc1b9d67ec99723276be5908d1"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}1$, $\\lambda$-grid)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_mf_n1_grid_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "678dc759d9bc818a88e03478251da29657eeaa40cedee873237a74255ff03753",
+          "final_metrics.json": "24060a4676698f06374f863ebd3556a3c7230dc06f9afbce6dba567f045254f1",
+          "cell_eval_minimal_stream_heldout.json": "ec036d6c73c5ec1a4cae77ad2619e0df57765147b387eb36a1ce4c7acac04770"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}1$, $\\lambda$-equal)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_mf_n1_equal_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "288f8aacdd42ace2084efeffc4f3745d901ef8c4924efb021ac9f655a0f0e2a6",
+          "final_metrics.json": "6d1ac238f6107b3bab08aa7bfc5ad1a23974fdebd44fe30efa9603228276de71",
+          "cell_eval_minimal_stream_heldout.json": "b5b8bce2b5a8c8fbfc7eace5f578b0453986b57a0c3c8744a5bbf5f78138619c"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}1$, $\\lambda$-equal)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_mf_n1_equal_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "55c82948a518b6b39b4e1388d23469ef64bbb4ddd8ab99de495fed3f7e8b4b50",
+          "final_metrics.json": "83203a88028c210a9847adb161e50b6756401de23dc45a22d11e6ab3c64e4500",
+          "cell_eval_minimal_stream_heldout.json": "ed32028ed3b7d25a4c70dccc902e8998f9dd3a9dd68a9a1ef05e0651239c98d9"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}1$, $\\lambda$-equal)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_mf_n1_equal_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "d3d70d581e9aa96a6cc53b692011659887c8f5ce9cf4df98ef379ac78accccf8",
+          "final_metrics.json": "cf3c0154f32038eeee9446d439134a3a2ade821423bb536925073b33af7e5838",
+          "cell_eval_minimal_stream_heldout.json": "9b337ff6e6d4ef15fb5ff8111f05c8baa8f7afaf5d7b2855f57009aea05c9c59"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}4$, $\\lambda$-grid)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_mf_n4_grid_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "ea3630caba11d6f803bf94bcffbd0da703faccb27ad6d989e99c2d6ae06d50a6",
+          "final_metrics.json": "1de7245c34f19f5dbec86c19a521031374b0bf38871a3daa417fcf58c5eaed3d",
+          "cell_eval_minimal_stream_heldout.json": "c7468e4867bc1ec0f1e5b68a6dd817d9ef8909273c59e0ab93bd0edcf9a03bb6"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}4$, $\\lambda$-grid)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_mf_n4_grid_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "6771fe543640e6f63e1ee01024d32f4051cb24f7bdb9bd292dff001022182439",
+          "final_metrics.json": "90f6abddba7d419686c97ce068a5534f850e3eefa6131354ba822fbe0fcdd3ef",
+          "cell_eval_minimal_stream_heldout.json": "2010e6d5461592d33d8993bb48fda976cda6aa128bcf5aeba1c49db922136845"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}4$, $\\lambda$-grid)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_mf_n4_grid_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "9535babf8eccf338e81bcb50236dc3f2d5028bb6be07cbc61c1ba9a638e9a621",
+          "final_metrics.json": "61b2094b29580ed7031c9b8b5086c9a3deed851983fe52d8b98951ea75b96f41",
+          "cell_eval_minimal_stream_heldout.json": "6039583c55fd26259201223f60b22ab3386227354f4deecc34c2d899dff7e985"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}4$, $\\lambda$-equal)",
+        "seed": 42,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_mf_n4_equal_st300000_ft150000_final_res2048_d6_s42",
+        "files": {
+          "config.json": "c252dfc1a6be40933a91d4cb9ca7cd3580ceb433527fb6c3f540ce3aa8f7b26a",
+          "final_metrics.json": "e014314f12690e51e4f6ddd44c38de713fff414ee51f8bdd34c5c9c2a594058b",
+          "cell_eval_minimal_stream_heldout.json": "2739e176f73aa7b4de23df151e8eabe4730fa88520ee91bb41fd48163e481f4a"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}4$, $\\lambda$-equal)",
+        "seed": 69,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_mf_n4_equal_st300000_ft150000_final_res2048_d6_s69",
+        "files": {
+          "config.json": "b1ee590d3c41ae90f45c3efa5ae387e6a35e52dc82a86a71457affa1be72c47d",
+          "final_metrics.json": "e3c4ed3d6653fe9e770043f721e37878b53ae32f53090ffec83fb60fa4155274",
+          "cell_eval_minimal_stream_heldout.json": "d3f627debfaae9bd7ca0b90e2c0c73c4df9b361e3ff60de79631f1401e1246ad"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}4$, $\\lambda$-equal)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/pbmc/trajectory_pca100_mf_n4_equal_st300000_ft150000_final_res2048_d6_s1714",
+        "files": {
+          "config.json": "351779f71cf7e5c194b1ea438f0190844a8f662b90c9f70e134e618ca2064e88",
+          "final_metrics.json": "2d064c3ff29670e1bfc66c4548b990bc2378daef1bb654bf331db634bf45fdae",
+          "cell_eval_minimal_stream_heldout.json": "979f0636c0e9741369d9b19045ed3474a117e11df9b58305b88d0f32f6c9a9e9"
+        }
+      }
+    ],
+    "replogle": [
+      {
+        "method": "Naive ($vf{=}0$, $pert{=}0$, $ctx{=}0$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/standard_pca50_embedding_p0c0_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "4007ce8c5550d8931ef016e1d111571b2d9a0f00ec7b857b8d2bd0b3dbb9aa4f",
+          "final_metrics.json": "4cb12a526eb387eb9d02a97ebf8f6b2420cb1158ef012fcc8ee4773a5392bad7",
+          "cell_eval_minimal_stream_heldout.json": "237a9e71f9e0410ce8f65d3c91a964596735b8a756aba57f44d2663d1ff01efb"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}0$, $pert{=}0$, $ctx{=}0$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/standard_pca50_embedding_p0c0_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "11db5cfe5112baf9915736224018a6062e54398876977b7dc19e9b61e0da1ad7",
+          "final_metrics.json": "2c2140dc3a430c84082aa1875adf4c5281f59501523d2b2703c30e99d9fddeea",
+          "cell_eval_minimal_stream_heldout.json": "32b72c589be3e7862d1d40ef9e4d0db4af505cf67e0ad8f1c79716cc49c95042"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}0$, $pert{=}0$, $ctx{=}0$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/standard_pca50_embedding_p0c0_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "864ca37608a90829ee99ac7bac012892f95312aad1383a5d53de8e2db6b25258",
+          "final_metrics.json": "32e620823d731d2a923f085e435eba8edc058616500a5c969cf7de521926bd7a",
+          "cell_eval_minimal_stream_heldout.json": "5dc0cccb55a58d8ffd62e0f8930a84a7b11ba62cfc75d4cd72e6bc243cb2948f"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}0$, $pert{=}1$, $ctx{=}1$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/standard_pca50_embedding_p1c1_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "7293dd8592401b8f83c6e6e03d3a0197819369e5a2adf1d1a4c8a0fc0335d4cb",
+          "final_metrics.json": "b70467193ef8a1f433d89b09e15136f36e80e7bcaf91e450ab458eac7da4e7d3",
+          "cell_eval_minimal_stream_heldout.json": "a3875e5b6ad82465984cfc86f6bfe8723c651829c0a1163d50f616b018a12625"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}0$, $pert{=}1$, $ctx{=}1$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/standard_pca50_embedding_p1c1_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "2c1917a5630869b4fba6f312494c103b3a0532ec6cd4794e51676d57d4d7f09c",
+          "final_metrics.json": "51afe33f40b7f8d186c5c1db0d3a44549c6e854ec036a456b43c7601d2114b59",
+          "cell_eval_minimal_stream_heldout.json": "9cd399bb36cf677faf6773a42f77a72d1e9d0ebded00d1a361d525a72c06cb33"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}0$, $pert{=}1$, $ctx{=}1$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/standard_pca50_embedding_p1c1_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "799c15743c8c044b632ee77e4a12077d04367ffe8aab7ec146a98897f3981658",
+          "final_metrics.json": "76f5a9275e718aa46d60fe228e97128ade3d862e4c8b40da979b5da6a72f450a",
+          "cell_eval_minimal_stream_heldout.json": "e9aca36e1bde4dcef0a68b90ab455e04e67155ba9d063ea122b097a1884f5744"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}0$, $ctx{=}0$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/standard_pca50_p0c0_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "5797f8b68a0698f303408a17548bc0dadc281db70bc540ead088776a67cf89db",
+          "final_metrics.json": "04900ab1adf513150adad0e3a70cefe2b747ec79629664509f6ec6b2898715af",
+          "cell_eval_minimal_stream_heldout.json": "6b4f39972119a265cc427fed45e7b48e7b8b8da2f5eb8392886ced20f7accbf2"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}0$, $ctx{=}0$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/standard_pca50_p0c0_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "e52bca677ea45042387d648709663279c259f9d9bf88277c5628e85de493a805",
+          "final_metrics.json": "c1f346cab8e78215d516f8bd1c023051de9f51b4b9fc487e927c6c9a82c4fcc3",
+          "cell_eval_minimal_stream_heldout.json": "e9e34f40e44299d34a000979db727eeeb3c4ccaa9b0bc07632a028850973cf23"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}0$, $ctx{=}0$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/standard_pca50_p0c0_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "4d1b4f517ae611dcd0fd65fa04dfc15fa9329e1a4ce8d3b44d4fc6504794ed3e",
+          "final_metrics.json": "a382a3c12ae564c98e52a49ca654f66ad5697c4f96bf67e87681fbed00a48aa3",
+          "cell_eval_minimal_stream_heldout.json": "339e51399ae4b9d0cace1e2d7c1296027269548eba9be5ffaecea9368768f86a"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}0$, $ctx{=}1$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/standard_pca50_p0c1_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "25e62f1d04410a2d2260f87fe778b29aec78ba2a9ee43a8c0524849cfa3b96be",
+          "final_metrics.json": "04900ab1adf513150adad0e3a70cefe2b747ec79629664509f6ec6b2898715af",
+          "cell_eval_minimal_stream_heldout.json": "6b4f39972119a265cc427fed45e7b48e7b8b8da2f5eb8392886ced20f7accbf2"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}0$, $ctx{=}1$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/standard_pca50_p0c1_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "76421eef201d9868673818b9d617b4bf65b9dcc924a012014eaa7c5f9c5376e5",
+          "final_metrics.json": "c1f346cab8e78215d516f8bd1c023051de9f51b4b9fc487e927c6c9a82c4fcc3",
+          "cell_eval_minimal_stream_heldout.json": "e9e34f40e44299d34a000979db727eeeb3c4ccaa9b0bc07632a028850973cf23"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}0$, $ctx{=}1$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/standard_pca50_p0c1_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "454945d91ea53a16e7303aa0c39a6694e3c2e3cd37efcdcae96665a5adfd7154",
+          "final_metrics.json": "a382a3c12ae564c98e52a49ca654f66ad5697c4f96bf67e87681fbed00a48aa3",
+          "cell_eval_minimal_stream_heldout.json": "339e51399ae4b9d0cace1e2d7c1296027269548eba9be5ffaecea9368768f86a"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}1$, $ctx{=}0$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/standard_pca50_p1c0_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "9ec63931a6db886b3cd99b2dbbac270c021173827238dd0ce2c743e9cbde0046",
+          "final_metrics.json": "5090631b005edccb258e2562136361bd346c023b124b8fab2caa007ccf5a9370",
+          "cell_eval_minimal_stream_heldout.json": "fe31c4551660849ffb2b0761e425778507b6b33fa179b5e39f465444c1e5f07f"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}1$, $ctx{=}0$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/standard_pca50_p1c0_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "0197ef8f2de67037243aedee12becb3694f506b6cb3ff67c5c079bd04a4d7f6e",
+          "final_metrics.json": "edb0e5e6815d3a8b53b0cb1db66067e51b0c2ebd4e62432476bc3413e7f92125",
+          "cell_eval_minimal_stream_heldout.json": "4de5587c37cfdafadf86c045f11f71c38350951271d7caa0fe456904ffc2433a"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}1$, $ctx{=}0$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/standard_pca50_p1c0_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "37da5275e650f6a50830cdc8537093fbed2ad8357bf240c45da45431e606fa27",
+          "final_metrics.json": "e18c85ddc464425741dfe27ed9da24169bfd2102f0dfa6041578ea4e21305b5f",
+          "cell_eval_minimal_stream_heldout.json": "76c8d3b49261b31d52c78b375413fa6015b052d2f4c7aadf2f917278f9a40175"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}1$, $ctx{=}1$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/standard_pca50_p1c1_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "d047620f103581ffb74520ad8bc7c878aeee873811d2e7f926289d403f817e47",
+          "final_metrics.json": "5090631b005edccb258e2562136361bd346c023b124b8fab2caa007ccf5a9370",
+          "cell_eval_minimal_stream_heldout.json": "fe31c4551660849ffb2b0761e425778507b6b33fa179b5e39f465444c1e5f07f"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}1$, $ctx{=}1$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/standard_pca50_p1c1_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "d4b6f7a6bf19164845d94079d9f48670fbba1586a9716627be9e8fe1b0cab594",
+          "final_metrics.json": "edb0e5e6815d3a8b53b0cb1db66067e51b0c2ebd4e62432476bc3413e7f92125",
+          "cell_eval_minimal_stream_heldout.json": "4de5587c37cfdafadf86c045f11f71c38350951271d7caa0fe456904ffc2433a"
+        }
+      },
+      {
+        "method": "Naive ($vf{=}1$, $pert{=}1$, $ctx{=}1$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/standard_pca50_p1c1_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "69fdee05468af86cc9c447584383954389a3ae40cf1d3e458ef55a4da508f442",
+          "final_metrics.json": "e18c85ddc464425741dfe27ed9da24169bfd2102f0dfa6041578ea4e21305b5f",
+          "cell_eval_minimal_stream_heldout.json": "76c8d3b49261b31d52c78b375413fa6015b052d2f4c7aadf2f917278f9a40175"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}4$, $\\alpha{=}8$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/standard_pca50_lora_r4_p0c0_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "4164040570dc65e6e3d11211c11ccb9696077a0e3a108e429966413fa5a0ae7e",
+          "final_metrics.json": "544a156a9108459909fcc7638d85cc26977c68e160f18669327105f6dc2a572e",
+          "cell_eval_minimal_stream_heldout.json": "0e3931a3b9e0a30daf03f7101e7ca4847b1d933f6dd43cd0b6f7e8d50948983f"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}4$, $\\alpha{=}8$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/standard_pca50_lora_r4_p0c0_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "1061164bb33d42d581721cea8de203ffed75e6977b4a6fe40ff90b917abaaa40",
+          "final_metrics.json": "9aa2a85dce311f71b932fb873d9e85516c25a27e197f752a37faedc9f271bd13",
+          "cell_eval_minimal_stream_heldout.json": "2cbf8d361755b61601152de8d33a8dfc7c0b8a59d1984afdd6dbc9a62d1cab31"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}4$, $\\alpha{=}8$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/standard_pca50_lora_r4_p0c0_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "e65e90757bbc456a8c5bf6fa253bea07b1f98a6cbd77c74b5f165180ec4cf82f",
+          "final_metrics.json": "b316c301bff7c1c94124d9648c9a30becc8f5d83a6af49bbff1d81096953b118",
+          "cell_eval_minimal_stream_heldout.json": "7654a406b850b3e888c62cce5a1e9ce48a70a1059fcd3667dc969ce14a5f87c4"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}8$, $\\alpha{=}16$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/standard_pca50_lora_r8_p0c0_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "930cccc6838e38264aebc3ea4e4b224f27f532db1221f12f4f040c8920e910ef",
+          "final_metrics.json": "9253e412b655da8a3b0566d93b7c40b3c3ed21de3a8dc6d46439db079490964b",
+          "cell_eval_minimal_stream_heldout.json": "29ce851e28963e92d9c99f3162b9282b79f49f30a82df39b80a623a58c7f7b3e"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}8$, $\\alpha{=}16$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/standard_pca50_lora_r8_p0c0_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "a3daaa548b46620cea80f38efe878de2f5be77ff96dddf12aea879e510ba3ef2",
+          "final_metrics.json": "5b3198d2953e4f7147a84ba77b66916ae01268c55c101631bc94695d751f9291",
+          "cell_eval_minimal_stream_heldout.json": "e059ee9b73cb690355edfe54e4896f426a5a20b03f6fff1d22e176c4fbccc59c"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}8$, $\\alpha{=}16$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/standard_pca50_lora_r8_p0c0_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "1f804ff84c52bb0606d2054aa29a7d659e5a29e15d0d774dd62dec1b837e9898",
+          "final_metrics.json": "fb77b1a3ed11afe31b3bac1c30c1b4b546753ff8039b15d65605129346694e3e",
+          "cell_eval_minimal_stream_heldout.json": "3b6ce6ce03eebde5576b4d026d2b42673b9b2aaa3fea98e83e393a04bf543b39"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}16$, $\\alpha{=}32$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/standard_pca50_lora_r16_p0c0_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "e56194234ca9d4dcc004749fa15291a33d0001c90d7357bb9e961d8a70586966",
+          "final_metrics.json": "7ae76bea68e85669b9f5623f9fdc9fa18e962c1e6cc75207379b9ff12c792964",
+          "cell_eval_minimal_stream_heldout.json": "cee83f4d7b2ed0367e342fb44747c8943cb040dd0349ccdc51ecc330c020b1ff"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}16$, $\\alpha{=}32$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/standard_pca50_lora_r16_p0c0_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "74beb6d2f79678dd7a7070ad7811f4886d1c8fa3e26bff89499c27a53ab746e9",
+          "final_metrics.json": "79b1d793b455c429db97ba9f118e63db42db77659df773c1dd597a8a565dcb1e",
+          "cell_eval_minimal_stream_heldout.json": "f5863b4de53b554a4131068b1ebc777f363d3ea7244f1ca9e6867228eafd0299"
+        }
+      },
+      {
+        "method": "LoRA ($r{=}16$, $\\alpha{=}32$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/standard_pca50_lora_r16_p0c0_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "5b84edb80e23e99f195491d7d33375fea04e4f07c8b0cadcf6594516e4c28e55",
+          "final_metrics.json": "7b0648d6a24160b89ea089d9325c636ba0c8ffdab127adf6e87dbc0f1d8e092c",
+          "cell_eval_minimal_stream_heldout.json": "db2bf4d39a21df4a258946afa9fe4ba01be03f4c8471cf02eb2fab832190b4ca"
+        }
+      },
+      {
+        "method": "GFT (sigmoid, $vf{=}1$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/gft_pca50_sigmoid_p0c0_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "5eb2d58d8d169f02bc009a2043f6f2798affd6eb7e9e1446021a499e9261059b",
+          "final_metrics.json": "033ef2c9c32725e6c6e7f62d7dd21e5794dd5c0dd343dc9b7fd787ae951788df",
+          "cell_eval_minimal_stream_heldout.json": "2f1e3538f73767e42b5c9476313955150885ddbf65fec9529d018fa636b51af7"
+        }
+      },
+      {
+        "method": "GFT (sigmoid, $vf{=}1$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/gft_pca50_sigmoid_p0c0_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "9c6d6f726cd2196050c452c94f62b61d79122018f21d28df8d3cdff1a4c2ee34",
+          "final_metrics.json": "8276a61a5f9b79460621d31e2152de9bc16510f466e34ef8f13576dd21982755",
+          "cell_eval_minimal_stream_heldout.json": "f802fe6b68dfa5be197916f46a6b9ac832678e11a9c52fcbc56825825cc71956"
+        }
+      },
+      {
+        "method": "GFT (sigmoid, $vf{=}1$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/gft_pca50_sigmoid_p0c0_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "241c447912ea78b69285806f78e6ba22f1748ba239111296b957df943d8e8ce8",
+          "final_metrics.json": "ceac4593eafcb96f1f7df25b088416abd5f91d335bf15eeade6003a8ac883a6a",
+          "cell_eval_minimal_stream_heldout.json": "dfa9fbe863a1fe8972cbf2b11963134d3eea4eb9f6ddcd5ee4cd462f09d66be3"
+        }
+      },
+      {
+        "method": "GFT (linear, $vf{=}1$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/gft_pca50_linear_p0c0_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "5c2c22fccdafa3ab1f9e96d8f8e6ba91c50e135cae7494f46858e57d8c88c49f",
+          "final_metrics.json": "eb9eabbd7d30d4e02fd0d3ec4b068bf9e4cc33cd742dede06d8ff1f6389d0151",
+          "cell_eval_minimal_stream_heldout.json": "548c83ebe4f065b0664b42d5536359b4aa3da278e35376ff61d7567ae1d89025"
+        }
+      },
+      {
+        "method": "GFT (linear, $vf{=}1$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/gft_pca50_linear_p0c0_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "1e803aa9ea53465975978fd4cfe02a51854a4fe95ec5a67d2574daf2f40194df",
+          "final_metrics.json": "2dad47fadef7813a42abc0133c0e2342a2737aeced9fe225d15d073aba8825db",
+          "cell_eval_minimal_stream_heldout.json": "ea8f9bc2c02137fe2041f91fe21a42c25388b18c04d86fabc6c549c3d9d9f87a"
+        }
+      },
+      {
+        "method": "GFT (linear, $vf{=}1$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/gft_pca50_linear_p0c0_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "60465dcf0333244a2138a4c9f39b2487be0f4a8faaff98c4bd3676b461862483",
+          "final_metrics.json": "e7be0cfc4d0324b5f5473a128f147e819f882f5951656b0514bf1f132364ccb3",
+          "cell_eval_minimal_stream_heldout.json": "a9241e2fa3796c941f278809039b047f37e34e952b5bc227e8b881d2bd9d52cf"
+        }
+      },
+      {
+        "method": "Two-stage (10\\% new ctx $\\to$ $vf{=}1$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/standard_pca50_tsf0.1_p0c0_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "742e72c596c596445ff2a27e3903eb1c44c51cd6fc58775fb606d7677b86ca78",
+          "final_metrics.json": "8cc6244ae67144518e3de34214b525f21b8dfc01dbe437e140934516b85a6307",
+          "cell_eval_minimal_stream_heldout.json": "9c7674bcb433b4ff9f81f5d2ac29c0db6e409df58145c27d2710e1deefe13d8c"
+        }
+      },
+      {
+        "method": "Two-stage (10\\% new ctx $\\to$ $vf{=}1$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/standard_pca50_tsf0.1_p0c0_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "af56c1f07234444c8215ed83fddbfae27723e0aaa7b5c592bb211fe81d2f2633",
+          "final_metrics.json": "e613231ada534e9100b5e429f495df091f09b936fafbf22453bb7fe206080104",
+          "cell_eval_minimal_stream_heldout.json": "c68de6ca1421db923fee298f1e9ee0a3f69b40ab27e99c233377b9a7dec097ee"
+        }
+      },
+      {
+        "method": "Two-stage (10\\% new ctx $\\to$ $vf{=}1$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/standard_pca50_tsf0.1_p0c0_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "f0f4482cce1fb7d64ebe5b2f99ebad3ddb2a09d1a7ec5ad2c783376b2a7c49e0",
+          "final_metrics.json": "821a882d75c35c810fff3ce4fb53c7452032e8ca009a103cbeaf274eaa8c3d02",
+          "cell_eval_minimal_stream_heldout.json": "37ef28508c642b11f542eb6af0f7e3ae96c4bcf42a5bd5bc55040b73e14e6216"
+        }
+      },
+      {
+        "method": "Two-stage (50\\% new ctx $\\to$ $vf{=}1$)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/standard_pca50_tsf0.5_p0c0_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "f2f35b4cffd9e94f68e55e00b63e18a8da77845c277c07d253b371e225ac659e",
+          "final_metrics.json": "1420f6e613ad26e8bdaa3284dcb5b941f80813b7ad654196d84fcc8633a7534d",
+          "cell_eval_minimal_stream_heldout.json": "26c065e562921d0940cdd3345034f99f1f436e6f1afb59815827fd9efa8b589f"
+        }
+      },
+      {
+        "method": "Two-stage (50\\% new ctx $\\to$ $vf{=}1$)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/standard_pca50_tsf0.5_p0c0_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "a14d35d33dcddc764c159e1a2e2947de356d31dc827374cf0da6cb79d9d51e66",
+          "final_metrics.json": "9815afe0ff9551be79b5c1fdd67ed5e7f4839efaf75a5a23b94b07687f32f7f0",
+          "cell_eval_minimal_stream_heldout.json": "db5037e3acc768a4597a3c79d1817ed400171c4bc430fe0493cb2837e9289fd0"
+        }
+      },
+      {
+        "method": "Two-stage (50\\% new ctx $\\to$ $vf{=}1$)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/standard_pca50_tsf0.5_p0c0_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "90d64c45610469282fff74e7c68c739c1493ce11e908f08d6f2c80a65f4cb485",
+          "final_metrics.json": "8ff7a3ac52091f71cc6308e5ea6d2901e3f4af62b145292fe0b2e77cb160eca8",
+          "cell_eval_minimal_stream_heldout.json": "a085674f77b15ab6d87b57354232ce5ba77e618834ec83cdac533b1c0ce9f0b5"
+        }
+      },
+      {
+        "method": "Real replay ($\\lambda$-grid)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/real_pca50_grid_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "697fe3fe46bcf75d0f5be26c780f266654d50de9861845a322af534f79fe2c38",
+          "final_metrics.json": "10e7e59269bed3deee7ee94d396e810347f5d9bafd2e9c30a19963381ba46fd2",
+          "cell_eval_minimal_stream_heldout.json": "374aa2fd07a5468c00098c9d25d6ce2583b4bce9472b0ab0240e8c7a6c472d10"
+        }
+      },
+      {
+        "method": "Real replay ($\\lambda$-grid)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/real_pca50_grid_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "538d2d5ace172bc70db80f9be2d9052560976302ae0e8c45afae5c7be35b9402",
+          "final_metrics.json": "d71875a0a9384485532a3eedb597b791f4d2394506d85d3644f31b49a1de403d",
+          "cell_eval_minimal_stream_heldout.json": "f0b020852879ff649a20e2ebfc1bf0e00eac3eb113fd6d3cb6b6db2ae88a16da"
+        }
+      },
+      {
+        "method": "Real replay ($\\lambda$-grid)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/real_pca50_grid_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "b5b653df19b3e28df708c0a5b8201399054e29397052520716f7a9a95dcdb919",
+          "final_metrics.json": "cf24b8f3605f7af3f57924dac5784353f1c5db669f8d871f049d86e734c48225",
+          "cell_eval_minimal_stream_heldout.json": "70568f09d3178c38b5f150710624235f12fbaa2d8108967e26701a6c9aae3b37"
+        }
+      },
+      {
+        "method": "Real replay ($\\lambda$-equal)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/real_pca50_equal_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "ed6fbb3754e19668ce74b5325e9a28d9adc4c043b8c74b7a3d78f6d0b5ad8dfe",
+          "final_metrics.json": "6744ca8aa7e72fe7904b04ac8475d573fa7fe5cd2890e230f225c31fc3ee8b39",
+          "cell_eval_minimal_stream_heldout.json": "1026b377fbc1f3547f99f87ada97b93dc18a6473ba8e128242154c240d11cec1"
+        }
+      },
+      {
+        "method": "Real replay ($\\lambda$-equal)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/real_pca50_equal_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "678b7933c6e22d3626827a85012e4721f293920fac26501ae4fee334af0d1b63",
+          "final_metrics.json": "beb25a4f21d3fe0d0ca122c22ea9c33bf7891b67f1118159bedefdad5d12fe02",
+          "cell_eval_minimal_stream_heldout.json": "109aec62d53fcd852d830bb6c80b24fdeef30a4cda9b20825c04e284e029f6d5"
+        }
+      },
+      {
+        "method": "Real replay ($\\lambda$-equal)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/real_pca50_equal_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "f34c73864135619cdd6a3b6c941d486dfb0c86afe341aec8173b49fb7c2eeb3e",
+          "final_metrics.json": "53d5d493e8f2c6e61435dd31410ac5b6c28b5a0dcdf7ca09f24ac06ead70c511",
+          "cell_eval_minimal_stream_heldout.json": "bdd1d4f8ababaabb0dceba9f43fa3c99831d207bbf3945b54189e27c3cd62da6"
+        }
+      },
+      {
+        "method": "Generative replay (ODE, $\\lambda$-grid)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/generative_pca50_ode_grid_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "0a9bf3e41f7cecf44a68679ff935558538d915ec6f93d32a606d66eba0db082e",
+          "final_metrics.json": "f0ccfeb9cd1d834fa58fa21423dd8a670d7aca50affce9c9c380f93dffc751ad",
+          "cell_eval_minimal_stream_heldout.json": "148896133757c3e876ffbf190563699b70af6f7a67ed72b33dba713b1e288e3b"
+        }
+      },
+      {
+        "method": "Generative replay (ODE, $\\lambda$-grid)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/generative_pca50_ode_grid_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "5ee318df73ca902ea16e9c5ed71d81bed53f0b6f9d8779aa294a158a75e011bc",
+          "final_metrics.json": "cc536c6ecf2a450c0cc614cda81304c4d803db3a328da9d3b540b645b0eab1f0",
+          "cell_eval_minimal_stream_heldout.json": "1ba00973f44b42477bca60d3f952a8d356aedc5df3101793659282deee464f32"
+        }
+      },
+      {
+        "method": "Generative replay (ODE, $\\lambda$-grid)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/generative_pca50_ode_grid_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "0e8f0a3fc6710437866712c1491342f2ca5b96b6a25aeab0eea096cbba4e416a",
+          "final_metrics.json": "6cb635fc1147b3d45704275e78f605ad4236dccee644ca993fa5f522f8d080f3",
+          "cell_eval_minimal_stream_heldout.json": "ca532741068e69c38dc13537f57f4153e15290bd24f8e0808af5cc7f2bc29f97"
+        }
+      },
+      {
+        "method": "Generative replay (ODE, $\\lambda$-equal)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/generative_pca50_ode_equal_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "ad97092daf89bedc0c4c28758d51837cebf843ad1ece56213348b6c8852bdc6e",
+          "final_metrics.json": "f0ccfeb9cd1d834fa58fa21423dd8a670d7aca50affce9c9c380f93dffc751ad",
+          "cell_eval_minimal_stream_heldout.json": "148896133757c3e876ffbf190563699b70af6f7a67ed72b33dba713b1e288e3b"
+        }
+      },
+      {
+        "method": "Generative replay (ODE, $\\lambda$-equal)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/generative_pca50_ode_equal_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "f3f2255be17d6f58736a1abe798cfcd089d05a07a88ba66d7fe6e3caebe8adad",
+          "final_metrics.json": "94a1866875060edd3915856a6d3cee06bed6dad1e3b7cdfb3e2290dddf781648",
+          "cell_eval_minimal_stream_heldout.json": "ae152ddb6f076ad8d22c5661f35fd74c40b12dacb2ce8e6ccf99be6129a007c3"
+        }
+      },
+      {
+        "method": "Generative replay (ODE, $\\lambda$-equal)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/generative_pca50_ode_equal_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "3c486b19dc63b20b0b129ecebbf06d17dcdb156a53bbe27a32ba7baee5fa8c0b",
+          "final_metrics.json": "af787aaeb23730658c9ba94370e55a2b5764d777482c8908e056d4c2011ceb4b",
+          "cell_eval_minimal_stream_heldout.json": "548f0a5dbc930f484321596eaecc77577c3bf00ba8f6910a04c2fbe352a1aa06"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}1$, $\\lambda$-grid)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/generative_pca50_mf_n1_grid_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "590832a90f8d9276da13790c85d1ee68a87625ee01056f3731482e396af39fb9",
+          "final_metrics.json": "99a28ab948c249b993418405fc948b702dbbf11dfd0c168264c5c350893d34c6",
+          "cell_eval_minimal_stream_heldout.json": "ab932d1c21a3d2bc44ec14c4c0d18260b3e784ed24dbcb0697bb8bb51f8ac8da"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}1$, $\\lambda$-grid)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/generative_pca50_mf_n1_grid_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "5910a8cb3503c68d3d648d50165d0856066e264b7b7364923e723bbcc007e75d",
+          "final_metrics.json": "266aea1bc8e3ff113de722ba8ac1e3042aeaf192c2902076f040a6e606175e06",
+          "cell_eval_minimal_stream_heldout.json": "f362515a50f8d909a94f8e79983cc10e943f2de7deaf42b308582b67221f875b"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}1$, $\\lambda$-grid)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/generative_pca50_mf_n1_grid_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "212374e0cd332c54da4c5089d8ea7e3d7ad7d7193859152a13fea645a60d9ef2",
+          "final_metrics.json": "e05ef4418754dc240553bd97bfc4afd5f0e0daaa694ed134d72b089810eb7575",
+          "cell_eval_minimal_stream_heldout.json": "a4c29576521c898637d86d7aa07202ef0caa5d46ab53a49de11cc5e6d014f7e6"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}1$, $\\lambda$-equal)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/generative_pca50_mf_n1_equal_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "7d2cb1965f8f99b734a41284b98c79c6ccdd96e312c21dfcfcfb995ab8690f33",
+          "final_metrics.json": "99a28ab948c249b993418405fc948b702dbbf11dfd0c168264c5c350893d34c6",
+          "cell_eval_minimal_stream_heldout.json": "ab932d1c21a3d2bc44ec14c4c0d18260b3e784ed24dbcb0697bb8bb51f8ac8da"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}1$, $\\lambda$-equal)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/generative_pca50_mf_n1_equal_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "369e06269272c859493de44a0281a7ab16c9184b4cbb38a2c4c3966fcf7fe5c3",
+          "final_metrics.json": "ac1ab973b010e4ee6655a5904c4dcfc882a71ef2202ce65a5eb9afbbfbf4b962",
+          "cell_eval_minimal_stream_heldout.json": "9d95240b8b301dce04566a4f300438afa243f39689c2c303284d158a4e995053"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}1$, $\\lambda$-equal)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/generative_pca50_mf_n1_equal_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "c2b6cf5872fd92cd816163dfd319bfc7cba962cd42387dc8dc3fe486e71f41ec",
+          "final_metrics.json": "3871d7ecdcf9cdbb537a61c7577879f8fc7248ceaa0960158e11a2f4968a821d",
+          "cell_eval_minimal_stream_heldout.json": "b32de90b82ede8e104f98456d16b1383db28ac4580858d4f3dbb3bb7aca00427"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}4$, $\\lambda$-grid)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/generative_pca50_mf_n4_grid_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "334372809cd451c45df53c6d7007c336831651db8eb04169be0f53e2715e6fc7",
+          "final_metrics.json": "296d89f8047a76676cc89a11d524758eb56911f4ed8361bb960716ee49c54745",
+          "cell_eval_minimal_stream_heldout.json": "e7c2973d47454309cd0d9c036e8867b36c6e264ecca7f2c7a1ef482d41d2b552"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}4$, $\\lambda$-grid)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/generative_pca50_mf_n4_grid_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "cbc11ec85f5f36a0aae77c5d9f366b239c7e83f37c9c5281d30c3dd807755872",
+          "final_metrics.json": "4f341eae04a707ca75ed4d3c8cc6037fbc640f2d167a9ccccdd90e15249c29df",
+          "cell_eval_minimal_stream_heldout.json": "0dbd6bcd25ac282a787d4c3e0499fb4dfa8425f93ff0bd4e7f10a9f9b31c9923"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}4$, $\\lambda$-grid)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/generative_pca50_mf_n4_grid_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "10b7db33ddfa09e673d1c1043e8afa53399a3dbe8c34d9f0f906fd9cb50bddb3",
+          "final_metrics.json": "01bbdda76c9c9f78fd785d69d3b3bd3d3371eeddf4f3d95cdb7ce65f7c6e6c66",
+          "cell_eval_minimal_stream_heldout.json": "949edd7e79c0095b47f6cada9ebe9a846e1271f659f129184a01de855e769247"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}4$, $\\lambda$-equal)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/generative_pca50_mf_n4_equal_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "f4fd8fe13cdd878101f9be2853622105ee0c782d628d4e40826546f13bfd4eee",
+          "final_metrics.json": "e406da4bbee878a68583fe51bb0c933a688559069120fdbdfaac97177874d455",
+          "cell_eval_minimal_stream_heldout.json": "f09c881dbcbd1373279292437489c38fbd40a72d5550882a4ec84b60c3fb2bca"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}4$, $\\lambda$-equal)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/generative_pca50_mf_n4_equal_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "26349502035bef744f2d11dd5c4e820723c5068c297f80c4e0d456dab3164016",
+          "final_metrics.json": "6077c2fb944ec4797a70b8713283f0fec8f965a24c09e0bfc9e8d22a2a62590c",
+          "cell_eval_minimal_stream_heldout.json": "6ffe1522beca6eb18688327c0375bd66c304ad4954de71ed206bca677f4b8637"
+        }
+      },
+      {
+        "method": "Generative replay (MeanFlow $N{=}4$, $\\lambda$-equal)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/generative_pca50_mf_n4_equal_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "9c321e26dc0948f006cead3868f4dcf50a4c2c51cf2cbf1e35c8302748d0170e",
+          "final_metrics.json": "b0488032e04449310a39803f506ee12ee2295e632c65e9c002765a955e0d939a",
+          "cell_eval_minimal_stream_heldout.json": "e1806ec3e0b3038bd5f91995ec609d44c7cdd0e13a241898d0877ffbbf355e9d"
+        }
+      },
+      {
+        "method": "Trajectory replay (ODE, $\\lambda$-grid)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_ode_grid_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "fac6e564655fa4d8ad6459c74345b600aa5d813bbaa7e436ebf1edb63356aeb3",
+          "final_metrics.json": "4cfc050e3932d23134b41302761a09bac431a783a2c47e77d2879e3e14e08092",
+          "cell_eval_minimal_stream_heldout.json": "1aa52c06944c26765d682a7a7905fe193e4b7e3bec5f7d41c5a88077302dd4d0"
+        }
+      },
+      {
+        "method": "Trajectory replay (ODE, $\\lambda$-grid)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_ode_grid_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "0b95e5d9f53a997dadd06243ce363e4725209ca31f3fcbbc0b88f54f8bd07f3d",
+          "final_metrics.json": "8b330cfb24328797502fd53133b8e69d7a7a7c82138070d9fed32f13f1be0407",
+          "cell_eval_minimal_stream_heldout.json": "d37d93760bf7c45a2d8150e2fb496384ea87e43a8a2589b15ff4c580e4ee959b"
+        }
+      },
+      {
+        "method": "Trajectory replay (ODE, $\\lambda$-grid)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_ode_grid_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "62014b24dd534405f39d7050f87a207d5fb7b2cc0a08ac544defdf8b314c19cd",
+          "final_metrics.json": "1cb2ec571cc976318b59aefa0b859f878c2658041b94d18f369d8d22ca59690c",
+          "cell_eval_minimal_stream_heldout.json": "fda0affad8ed67bd01a41200322473c29dab4344fa6af8ea97d6b24c4ca8b9eb"
+        }
+      },
+      {
+        "method": "Trajectory replay (ODE, $\\lambda$-equal)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_ode_equal_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "d883a5266ab46de4243a9d42a5a595dc1e23ccc6f01143cdcd857fdb78da34aa",
+          "final_metrics.json": "369759092f66426d8cecbf558d516fb8ce960ef53628a25819752163ccc23536",
+          "cell_eval_minimal_stream_heldout.json": "905d1cbaa5a9d1ee3a84124cd9bbb06b28d1825b6db7c07700745ceb9194bf94"
+        }
+      },
+      {
+        "method": "Trajectory replay (ODE, $\\lambda$-equal)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_ode_equal_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "33853ef3553ce298a1560800b754fa4a3c1f9a25d4638573c5d1873d8473fd42",
+          "final_metrics.json": "80471d8273c9cc7916a12e93d05b7089e1e1ed8293bf919e28c1160f078e22ba",
+          "cell_eval_minimal_stream_heldout.json": "316d2176a6dc74fc1cfe581be0d07a93f766684433af58f9b24825a8e94bb6e2"
+        }
+      },
+      {
+        "method": "Trajectory replay (ODE, $\\lambda$-equal)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_ode_equal_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "036c0fb76b5656dd6ddf3a02249358f7672d2e5b52391f78bc180ae2fddd3048",
+          "final_metrics.json": "35977cfa81c3992fd0eff6f9c608b4924229767078cd9ca66dbe1cbc12dec76f",
+          "cell_eval_minimal_stream_heldout.json": "41dbab26483476af401a2f989fe45caf21e7c97fbfc415113363534f8880c2bc"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}1$, $\\lambda$-grid)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_mf_n1_grid_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "4ff10bc227cb8006dadc5fd02f2ec29d8da6beca0b7636f94f2b5d0d772ce7e6",
+          "final_metrics.json": "70898aa2e28c5723a4972f02319afafed4aede3c21268797e52bffa9c00d3f78",
+          "cell_eval_minimal_stream_heldout.json": "f39884947a1c05f268668bc5a396472772d8e6a1559d5838438784e3e3501b0b"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}1$, $\\lambda$-grid)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_mf_n1_grid_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "eb3ba3712e9d6302039b0db59163cacde4be68280a8fda6da01524aded32d02c",
+          "final_metrics.json": "b7254c11b53eed16ce92999d773670d2c60c76b5a899582c1fc7ec1bcafd9c26",
+          "cell_eval_minimal_stream_heldout.json": "08b92635aba3e5bb6d3c921cbef4faa210c0e6c1f1883a9649b90c523db2ecc1"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}1$, $\\lambda$-grid)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_mf_n1_grid_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "a7b700ad286cf28e464d5e75203adad2b2ff8d0d7fb9c20f429bedd1e9d1491a",
+          "final_metrics.json": "6f8e69a663e25df3836eedc671cd43d76c1a66c137a56db050a921ff0d748087",
+          "cell_eval_minimal_stream_heldout.json": "0e3feba9ee707f6f340b91556cef0bec0d3dd0748b4aa2d45f1cef65a5c58afc"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}1$, $\\lambda$-equal)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_mf_n1_equal_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "f80b104b68ad8bb029e837eea00e69840e721934fb3dab8e275e91d3ad4098f7",
+          "final_metrics.json": "537936785f77fe685f19a31e0ca7b6d17163b9a6bbca3ce86302a031cac0eafe",
+          "cell_eval_minimal_stream_heldout.json": "12b6710aa4ff819b9d979f9f8ce3d8c26fc7eb8d7a3e5e1242c6ce775b1207c3"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}1$, $\\lambda$-equal)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_mf_n1_equal_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "fab6bfbc23aeb851c7d67c6ab9c26e9dff0ed8b95298981a6fc0de61ed868cec",
+          "final_metrics.json": "b9c2d1d65b4f887fb817ea571d29dbba9ca4fbba6ba78eb81f06d362857c12c8",
+          "cell_eval_minimal_stream_heldout.json": "9c9293571cb49a18fad66ececa8b04dcf877b15743255b6217aa92edda210ad1"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}1$, $\\lambda$-equal)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_mf_n1_equal_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "dc5cf9d686c5f05be7535b57fc6f64d84442ca6368e5dbe32a9e2926b751b7ec",
+          "final_metrics.json": "7f60730fe57dd57ae07fdc570fe238ea2f5d92925ea7ed1271f06e9d9f77d22c",
+          "cell_eval_minimal_stream_heldout.json": "fea99ed11d7b8df0c57f4de4f638e5ee2b120028c87232936c04e6cf7e7edb43"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}4$, $\\lambda$-grid)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_mf_n4_grid_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "9776be6e2f9205e97d94b5df22d9c3bde400b20f8bb24858895255fd49d661c1",
+          "final_metrics.json": "6e7d9a18e96e994b3a6c93eb6433f8ec2dc3a9067f24de8308f1aa5a5e9de203",
+          "cell_eval_minimal_stream_heldout.json": "dabb01c2aee4df29e2a7212701a06099822418afb42bf6ff30601dba21b432ed"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}4$, $\\lambda$-grid)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_mf_n4_grid_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "4c8f9ca6a7dad9c87d37a0d673f1e56a9b5f34d506abae673a12c35994de3e78",
+          "final_metrics.json": "bb0a4267b1374beccbc3ae3d6f43cb3dc83b5a2b04ba41bcd19688d53f51ee06",
+          "cell_eval_minimal_stream_heldout.json": "d4bdeac2c79b030f43506236ba540b620ed437d3c8474647b2bc1f31bcc19951"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}4$, $\\lambda$-grid)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_mf_n4_grid_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "d10807c3cfa62c12819c333b13ddd6aa5fe926e8094373701cacc5a73fcd9f21",
+          "final_metrics.json": "10c8967634d96a106745af92e93d629e2181781db2a147c2838316822a3115d2",
+          "cell_eval_minimal_stream_heldout.json": "0b7360c465f60b48d2ce677513104b061e146403f72c3972ef74871a550ed7d5"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}4$, $\\lambda$-equal)",
+        "seed": 42,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_mf_n4_equal_st100000_ft50000_final_mlp2048_d4_s42",
+        "files": {
+          "config.json": "6c0c8b366782e606210772c7f306fa53a1470492befb26b9442196a0331867da",
+          "final_metrics.json": "c610e2df89cde80f78fb59230cfc4658ee3d2b07880e9f7511322fe055b72559",
+          "cell_eval_minimal_stream_heldout.json": "20bf8992dbb957551d6c68c438d0dac9899e424104562e091517a7421b00248c"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}4$, $\\lambda$-equal)",
+        "seed": 69,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_mf_n4_equal_st100000_ft50000_final_mlp2048_d4_s69",
+        "files": {
+          "config.json": "474d9acf9945a0fb20453a836962672db00c7bcc98afdb62fefd36b6496087f9",
+          "final_metrics.json": "ff83e6d6a43dfb22566d0004d29c46f7101594f89d6a1b5b5d9a14b28f902f7e",
+          "cell_eval_minimal_stream_heldout.json": "6529b163f837c709a0b4f8fd9cb631eecef0b9f2be61a9e930c86fb29b246e00"
+        }
+      },
+      {
+        "method": "Trajectory replay (MeanFlow $N{=}4$, $\\lambda$-equal)",
+        "seed": 1714,
+        "path": "results_dir/tx_results/replogle/trajectory_pca50_mf_n4_equal_st100000_ft50000_final_mlp2048_d4_s1714",
+        "files": {
+          "config.json": "e2e55ced0ada8ce583593e3dd448593ad237efcf751dc3528a58171e847069d5",
+          "final_metrics.json": "8969e839ebda48a5046fce15defb2999cbf645c0887bed572e9b1d340045bc3d",
+          "cell_eval_minimal_stream_heldout.json": "ffbb8e123c84ba3a102da547cc8bd01e846b6b517891f2a8295aa78ad0299ab7"
+        }
+      }
+    ]
+  }
+}

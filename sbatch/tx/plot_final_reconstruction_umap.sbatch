@@ -1,0 +1,24 @@
+#!/bin/bash
+#SBATCH --job-name=tx-final-recon-umap
+#SBATCH --qos=normal
+#SBATCH --wckey=hooke-predict
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=128G
+#SBATCH --time=2:00:00
+#SBATCH --output=sbatch/logs/tx_final_recon_umap_%j.log
+#SBATCH --partition=cpu
+
+# Protocol-matched observed vs frozen-affine reconstruction UMAPs:
+# Replogle PCA-50 and PBMC PCA-100.
+#
+#   sbatch sbatch/tx/plot_final_reconstruction_umap.sbatch
+
+set -euo pipefail
+REPO_ROOT="${REPO_ROOT:-${SLURM_SUBMIT_DIR:-$PWD}}"
+cd "${REPO_ROOT}"
+mkdir -p sbatch/logs
+
+PYTHON_BIN="${PYTHON_BIN:-${REPO_ROOT}/.venv/bin/python3}"
+
+"${PYTHON_BIN}" experiments/tx/plot_final_reconstruction_umap.py "$@"

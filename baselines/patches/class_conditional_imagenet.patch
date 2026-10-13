@@ -1,0 +1,987 @@
+diff --git a/src/common/diffusion_utils.py b/src/common/diffusion_utils.py
+index eaeedd6..772b476 100644
+--- a/src/common/diffusion_utils.py
++++ b/src/common/diffusion_utils.py
+@@ -7,7 +7,17 @@ from typing import List, Union, Optional
+ from PIL import Image
+ 
+ 
+-def wrap_in_pipeline(model, scheduler, pipeline_class, num_inference_steps: int, default_eta: float = 0.0, def_output_type: str = "torch"):
++def wrap_in_pipeline(
++    model,
++    scheduler,
++    pipeline_class,
++    num_inference_steps: int,
++    default_eta: float = 0.0,
++    def_output_type: str = "torch",
++    *,
++    null_class_id: Optional[int] = None,
++    default_guidance_scale: float = 1.0,
++):
+     """
+     Wrap a model in a pipeline for sampling.
+ 
+@@ -18,28 +28,46 @@ def wrap_in_pipeline(model, scheduler, pipeline_class, num_inference_steps: int,
+         num_inference_steps: The number of inference steps to use.
+         eta: The eta value to use.
+         def_output_type: The output type to use. Options are "torch", "torch_raw", and "pil". Defaults to "torch".
++        null_class_id: Null class id for CFG (class-conditional UNets).
++        default_guidance_scale: Default CFG scale for ``generate``.
+     """
+     assert def_output_type in ["torch", "torch_raw", "pil"], f"Invalid output type {def_output_type}"
+-    
+-    def generate(self, batch_size: int, target_steps: Union[List[int], int] = 0, generation_steps: int = num_inference_steps, eta: float = default_eta, output_type: str = def_output_type, seed: Optional[int] = None) -> torch.Tensor:   
++
++    def generate(
++        self,
++        batch_size: int,
++        target_steps: Union[List[int], int] = 0,
++        generation_steps: int = num_inference_steps,
++        eta: float = default_eta,
++        output_type: str = def_output_type,
++        seed: Optional[int] = None,
++        class_labels: Optional[torch.Tensor] = None,
++        guidance_scale: Optional[float] = None,
++    ) -> torch.Tensor:
+         if seed is not None:
+             generator = torch.Generator(device=self.device)
+-            generator.manual_seed(seed) 
++            generator.manual_seed(seed)
+         else:
+-            generator = None       
++            generator = None
+         pipeline = pipeline_class(unet=self, scheduler=scheduler)
+         pipeline.set_progress_bar_config(disable=True)
++        scale = float(default_guidance_scale if guidance_scale is None else guidance_scale)
+         samples = pipeline(
+-            batch_size, 
++            batch_size,
+             generator=generator,
+             num_inference_steps=generation_steps,
+             eta=eta,
+-            output_type=output_type, 
++            output_type=output_type,
+             target_steps=target_steps,
++            class_labels=class_labels,
++            guidance_scale=scale,
++            null_class_id=null_class_id,
+         )
+         return samples
+-    
++
+     model.generate = types.MethodType(generate, model)
++    model._class_cond_null_id = null_class_id
++    model._class_cond_guidance_scale = float(default_guidance_scale)
+ 
+ 
+ def make_grid(images, rows, cols):
+@@ -50,8 +78,30 @@ def make_grid(images, rows, cols):
+     return grid
+ 
+ 
+-def generate_diffusion_samples(output_dir, eval_batch_size, epoch, generator, generation_steps: int = 20, eta: float = 0.0, seed: Optional[int] = None):
+-    generated_images = generator.generate(eval_batch_size, generation_steps=generation_steps, output_type="torch", eta=eta, seed=seed)
++def generate_diffusion_samples(
++    output_dir,
++    eval_batch_size,
++    epoch,
++    generator,
++    generation_steps: int = 20,
++    eta: float = 0.0,
++    seed: Optional[int] = None,
++    to_pixels=None,
++    class_labels: Optional[torch.Tensor] = None,
++    guidance_scale: Optional[float] = None,
++):
++    output_type = "torch_raw" if to_pixels is not None else "torch"
++    generated_images = generator.generate(
++        eval_batch_size,
++        generation_steps=generation_steps,
++        output_type=output_type,
++        eta=eta,
++        seed=seed,
++        class_labels=class_labels,
++        guidance_scale=guidance_scale,
++    )
++    if to_pixels is not None:
++        generated_images = to_pixels(generated_images).add(1).div(2).clamp(0, 1)
+     # To PIL image
+     generated_images = generated_images.mul(255).to(torch.uint8)
+     generated_images = generated_images.permute(0, 2, 3, 1).cpu().numpy()
+@@ -63,4 +113,4 @@ def generate_diffusion_samples(output_dir, eval_batch_size, epoch, generator, ge
+     # Save the images
+     samples_dir = os.path.join(output_dir, "samples")
+     os.makedirs(samples_dir, exist_ok=True)
+-    generated_images.save(f"{samples_dir}/{epoch:04d}.png", quality=100, subsampling=0)
+\ No newline at end of file
++    generated_images.save(f"{samples_dir}/{epoch:04d}.png", quality=100, subsampling=0)
+diff --git a/src/continual_learning/strategies.py b/src/continual_learning/strategies.py
+index aefc407..8da8374 100644
+--- a/src/continual_learning/strategies.py
++++ b/src/continual_learning/strategies.py
+@@ -249,12 +249,71 @@ class BaseDiffusionTraining(SupervisedTemplate):
+         self.replay_start_timestep = replay_start_timestep
+         self.lambd = lambd
+         self.weight_replay_loss = weight_replay_loss
+-
+-    def generate_samples(self, batch_size):
++        # Class-conditional knobs (set by train_cl after construction).
++        self.use_class_conditioning = False
++        self.null_class_id = -1
++        self.label_dropout = 0.0
++        self.guidance_scale = 1.0
++        self.seen_classes: List[int] = []
++        self.old_class_ids: List[int] = []
++
++    def _class_cond(self) -> bool:
++        return bool(getattr(self, "use_class_conditioning", False))
++
++    def _apply_label_dropout(self, y: torch.Tensor) -> torch.Tensor:
++        if not self._class_cond() or float(self.label_dropout) <= 0.0:
++            return y
++        y = y.long().view(-1)
++        drop = torch.rand(y.shape[0], device=y.device) < float(self.label_dropout)
++        if not bool(drop.any()):
++            return y
++        out = y.clone()
++        out[drop] = int(self.null_class_id)
++        return out
++
++    def _sample_labels_from(self, class_ids: Sequence[int], n: int) -> torch.Tensor:
++        if not class_ids:
++            raise ValueError("class_ids must be non-empty for class-conditional sampling")
++        ids = torch.tensor(list(class_ids), dtype=torch.long, device=self.device)
++        idx = torch.randint(0, ids.numel(), (int(n),), device=self.device)
++        return ids[idx]
++
++    def _unet_noise_pred(
++        self,
++        model: nn.Module,
++        sample: torch.Tensor,
++        timesteps: torch.Tensor,
++        class_labels: Optional[torch.Tensor] = None,
++    ) -> torch.Tensor:
++        if not self._class_cond() or class_labels is None:
++            return model(sample, timesteps, return_dict=False)[0]
++        return model(
++            sample,
++            timesteps,
++            class_labels=class_labels.long().view(-1),
++            return_dict=False,
++        )[0]
++
++    def generate_samples(self, batch_size, class_labels: Optional[torch.Tensor] = None):
+         """
+         Generate samples from the generator.
++
++        Latent-space runs set ``sample_output_type = "torch_raw"`` so samples
++        skip the pixel [-1,1]->[0,1] remap and reach the VAE decoder intact.
++
++        Class-conditional runs sample labels over ``seen_classes`` (eval) unless
++        ``class_labels`` is provided explicitly.
+         """
+-        return self.model.generate(batch_size, output_type="torch")
++        kwargs = {"output_type": getattr(self, "sample_output_type", "torch")}
++        if self._class_cond():
++            if class_labels is None:
++                pool = self.seen_classes or list(
++                    getattr(self.experience, "classes_in_this_experience", [])
++                )
++                class_labels = self._sample_labels_from(pool, batch_size)
++            kwargs["class_labels"] = class_labels
++            kwargs["guidance_scale"] = float(self.guidance_scale)
++        return self.model.generate(batch_size, **kwargs)
+ 
+     def criterion(self):
+         """
+@@ -331,6 +390,8 @@ class BaseDiffusionTraining(SupervisedTemplate):
+         Called before the training of a new experience starts.
+         """
+         self.train_exp_id = self.experience.current_experience
++        # Classes from completed experiences (for class-cond replay labels).
++        self.old_class_ids = list(self.seen_classes)
+ 
+         if self.untrained_generator:
+             return super()._before_training_exp(**kwargs)
+@@ -342,6 +403,10 @@ class BaseDiffusionTraining(SupervisedTemplate):
+ 
+     def _after_training_exp(self, **kwargs):
+         self.untrained_generator = False
++        for c in list(getattr(self.experience, "classes_in_this_experience", [])):
++            ci = int(c)
++            if ci not in self.seen_classes:
++                self.seen_classes.append(ci)
+         return super()._after_training_exp(**kwargs)
+ 
+     def eval_epoch(self, **kwargs):
+@@ -415,7 +480,10 @@ class NaiveDiffusionTraining(BaseDiffusionTraining):
+     def forward(self):
+         noisy_images = self.scheduler.add_noise(
+             self.mbatch[0], self.noise_x, self.timesteps)
+-        return self.model(noisy_images, self.timesteps, return_dict=False)[0]
++        labels = None
++        if self._class_cond():
++            labels = self._apply_label_dropout(self.mb_y.to(self.device))
++        return self._unet_noise_pred(self.model, noisy_images, self.timesteps, labels)
+ 
+ 
+ class CumulativeDiffusionTraining(NaiveDiffusionTraining):
+@@ -667,6 +735,9 @@ class FullGenerationDistillationDiffusionTraining(BaseDiffusionTraining):
+         batch_size = self.mbatch[0].shape[0]
+         noisy_images = self.scheduler.add_noise(
+             self.mbatch[0], self.noise_x, self.timesteps)
++        y_real = None
++        if self._class_cond():
++            y_real = self._apply_label_dropout(self.mb_y.to(self.device))
+ 
+         if not self.untrained_generator:
+             assert self.old_model is not None
+@@ -676,34 +747,47 @@ class FullGenerationDistillationDiffusionTraining(BaseDiffusionTraining):
+                     batch_size,), device=self.device
+             ).long()
+ 
+-            replay_images = self.old_model.generate(
+-                batch_size, 
+-                generation_steps=self.teacher_steps, 
+-                eta=self.teacher_eta
+-            ).to(self.device)
++            y_old = None
++            gen_kwargs = dict(
++                batch_size=batch_size,
++                generation_steps=self.teacher_steps,
++                eta=self.teacher_eta,
++            )
++            if self._class_cond():
++                y_old = self._sample_labels_from(self.old_class_ids, batch_size)
++                gen_kwargs["class_labels"] = y_old
++                gen_kwargs["guidance_scale"] = 1.0
++
++            replay_images = self.old_model.generate(**gen_kwargs).to(self.device)
+             replay_images = self.scheduler.add_noise(
+                 replay_images, noise_replay, timesteps_replay)
+-            
++
+             if torch.cuda.device_count() > 1:
+                 noisy_replay_images_in_old_generator = replay_images.to(torch.device("cuda:1"))
+                 timesteps_replay_in_old_generator = timesteps_replay.to(torch.device("cuda:1"))
++                y_old_teacher = None if y_old is None else y_old.to(torch.device("cuda:1"))
+             else:
+                 noisy_replay_images_in_old_generator = replay_images
+                 timesteps_replay_in_old_generator = timesteps_replay
++                y_old_teacher = y_old
+ 
+             with torch.no_grad():
+-                noise_prediction = self.old_model(
+-                    noisy_replay_images_in_old_generator, 
++                noise_prediction = self._unet_noise_pred(
++                    self.old_model,
++                    noisy_replay_images_in_old_generator,
+                     timesteps_replay_in_old_generator,
+-                    return_dict=False
+-                )[0].to(self.device)
++                    y_old_teacher,
++                ).to(self.device)
+ 
+             noisy_images = torch.cat([noisy_images, replay_images], dim=0)
+             self.noise_x = torch.cat([self.noise_x, noise_prediction], dim=0)
+             self.timesteps = torch.cat(
+                 [self.timesteps, timesteps_replay], dim=0)
++            if self._class_cond():
++                y_old_drop = self._apply_label_dropout(y_old)
++                y_real = torch.cat([y_real, y_old_drop], dim=0)
+ 
+-        return self.model(noisy_images, self.timesteps, return_dict=False)[0]
++        return self._unet_noise_pred(self.model, noisy_images, self.timesteps, y_real)
+ 
+ 
+ class PartialGenerationDistillationDiffusionTraining(BaseDiffusionTraining):
+@@ -720,6 +804,9 @@ class PartialGenerationDistillationDiffusionTraining(BaseDiffusionTraining):
+         batch_size = self.mbatch[0].shape[0]
+         noisy_images = self.scheduler.add_noise(
+             self.mbatch[0], self.noise_x, self.timesteps)
++        y_real = None
++        if self._class_cond():
++            y_real = self._apply_label_dropout(self.mb_y.to(self.device))
+ 
+         if not self.untrained_generator:
+             assert self.old_model is not None
+@@ -728,36 +815,56 @@ class PartialGenerationDistillationDiffusionTraining(BaseDiffusionTraining):
+                     batch_size,), device=self.device
+             ).long()
+ 
++            y_old = None
+             if torch.cuda.device_count() > 1:
+                 timesteps_replay_in_old_generator = timesteps_replay.to(torch.device("cuda:1"))
+             else:
+                 timesteps_replay_in_old_generator = timesteps_replay
+ 
++            gen_kwargs = dict(
++                batch_size=batch_size,
++                generation_steps=self.teacher_steps,
++                eta=self.teacher_eta,
++            )
++            # Partial GD rolls from intermediate noise; class labels still apply.
++            if self._class_cond():
++                y_old = self._sample_labels_from(self.old_class_ids, batch_size)
++                gen_kwargs["class_labels"] = y_old
++                gen_kwargs["guidance_scale"] = 1.0
++            # Upstream API: second positional is target_steps (= timesteps_replay).
+             replay_images = self.old_model.generate(
+-                batch_size, 
+-                timesteps_replay_in_old_generator, 
+-                generation_steps=self.teacher_steps, 
+-                eta=self.teacher_eta
++                batch_size,
++                timesteps_replay_in_old_generator,
++                generation_steps=self.teacher_steps,
++                eta=self.teacher_eta,
++                class_labels=y_old,
++                guidance_scale=1.0 if self._class_cond() else None,
+             ).to(self.device)
+ 
+             if torch.cuda.device_count() > 1:
+                 replay_images_in_old_generator = replay_images.to(torch.device("cuda:1"))
++                y_old_teacher = None if y_old is None else y_old.to(torch.device("cuda:1"))
+             else:
+                 replay_images_in_old_generator = replay_images
++                y_old_teacher = y_old
+ 
+             with torch.no_grad():
+-                noise_prediction = self.old_model(
+-                    replay_images_in_old_generator, 
+-                    timesteps_replay_in_old_generator, 
+-                    return_dict=False
+-                )[0].to(self.device)
++                noise_prediction = self._unet_noise_pred(
++                    self.old_model,
++                    replay_images_in_old_generator,
++                    timesteps_replay_in_old_generator,
++                    y_old_teacher,
++                ).to(self.device)
+ 
+             noisy_images = torch.cat([noisy_images, replay_images], dim=0)
+             self.noise_x = torch.cat([self.noise_x, noise_prediction], dim=0)
+             self.timesteps = torch.cat(
+                 [self.timesteps, timesteps_replay], dim=0)
++            if self._class_cond():
++                y_old_drop = self._apply_label_dropout(y_old)
++                y_real = torch.cat([y_real, y_old_drop], dim=0)
+ 
+-        return self.model(noisy_images, self.timesteps, return_dict=False)[0]
++        return self._unet_noise_pred(self.model, noisy_images, self.timesteps, y_real)
+ 
+ 
+ class NoDistillationDiffusionTraining(BaseDiffusionTraining):
+@@ -774,6 +881,9 @@ class NoDistillationDiffusionTraining(BaseDiffusionTraining):
+         batch_size = self.mbatch[0].shape[0]
+         noisy_images = self.scheduler.add_noise(
+             self.mbatch[0], self.noise_x, self.timesteps)
++        y_real = None
++        if self._class_cond():
++            y_real = self._apply_label_dropout(self.mb_y.to(self.device))
+ 
+         if not self.untrained_generator:
+             assert self.old_model is not None
+@@ -783,11 +893,18 @@ class NoDistillationDiffusionTraining(BaseDiffusionTraining):
+                     batch_size,), device=self.device
+             ).long()
+ 
+-            replay_images = self.old_model.generate(
+-                batch_size, 
+-                generation_steps=self.teacher_steps, 
+-                eta=self.teacher_eta
+-            ).to(self.device)
++            gen_kwargs = dict(
++                batch_size=batch_size,
++                generation_steps=self.teacher_steps,
++                eta=self.teacher_eta,
++            )
++            y_old = None
++            if self._class_cond():
++                y_old = self._sample_labels_from(self.old_class_ids, batch_size)
++                gen_kwargs["class_labels"] = y_old
++                gen_kwargs["guidance_scale"] = 1.0
++
++            replay_images = self.old_model.generate(**gen_kwargs).to(self.device)
+             noisy_replay_images = self.scheduler.add_noise(
+                 replay_images, noise_replay, timesteps_replay)
+ 
+@@ -796,8 +913,11 @@ class NoDistillationDiffusionTraining(BaseDiffusionTraining):
+             self.noise_x = torch.cat([self.noise_x, noise_replay], dim=0)
+             self.timesteps = torch.cat(
+                 [self.timesteps, timesteps_replay], dim=0)
++            if self._class_cond():
++                y_old_drop = self._apply_label_dropout(y_old)
++                y_real = torch.cat([y_real, y_old_drop], dim=0)
+ 
+-        return self.model(noisy_images, self.timesteps, return_dict=False)[0]
++        return self._unet_noise_pred(self.model, noisy_images, self.timesteps, y_real)
+ 
+ 
+ class VAETraining(SupervisedTemplate):
+diff --git a/src/pipelines/pipeline_ddim.py b/src/pipelines/pipeline_ddim.py
+index 99fe269..b5f5714 100644
+--- a/src/pipelines/pipeline_ddim.py
++++ b/src/pipelines/pipeline_ddim.py
+@@ -53,6 +53,9 @@ class DDIMPipeline(DiffusionPipeline):
+         use_clipped_model_output: Optional[bool] = None,
+         output_type: Optional[str] = "torch",
+         return_dict: bool = True,
++        class_labels: Optional[torch.Tensor] = None,
++        guidance_scale: float = 1.0,
++        null_class_id: Optional[int] = None,
+     ) -> Union[ImagePipelineOutput, Tuple, torch.Tensor]:
+         r"""
+         Args:
+@@ -64,26 +67,35 @@ class DDIMPipeline(DiffusionPipeline):
+             eta (`float`, *optional*, defaults to 0.0):
+                 The eta parameter which controls the scale of the variance (0 is DDIM and 1 is one type of DDPM).
+             num_inference_steps (`int`, *optional*, defaults to 50):
+-                The number of denoising steps. More denoising steps usually lead to a higher quality image at the
+-                expense of slower inference.
++                The number of denoising steps.
+             target_step (`int`, *optional*, defaults to 0):
+-                The step at which to stop the denoising process. If `target_step` is 0, the denoising process will
+-                continue until the last step. If `target_step` is greater than 0, the denoising process will stop at
+-                `target_step` and the image will be denoised to the corresponding noise level.
++                The step at which to stop the denoising process.
+             use_clipped_model_output (`bool`, *optional*, defaults to `None`):
+-                if `True` or `False`, see documentation for `DDIMScheduler.step`. If `None`, nothing is passed
+-                downstream to the scheduler. So use `None` for schedulers which don't support this argument.
++                if `True` or `False`, see documentation for `DDIMScheduler.step`.
+             output_type (`str`, *optional*, defaults to `"pil"`):
+-                The output format of the generate image. Choose between
+-                [PIL](https://pillow.readthedocs.io/en/stable/): `PIL.Image.Image` or `np.array`.
++                The output format of the generate image.
+             return_dict (`bool`, *optional*, defaults to `True`):
+                 Whether or not to return a [`~pipelines.ImagePipelineOutput`] instead of a plain tuple.
+-
+-        Returns:
+-            [`~pipelines.ImagePipelineOutput`] or `tuple`: [`~pipelines.utils.ImagePipelineOutput`] if `return_dict` is
+-            True, otherwise a `tuple. When returning a tuple, the first element is a list with the generated images.
++            class_labels (`torch.Tensor`, *optional*):
++                Integer class labels for class-conditional UNets.
++            guidance_scale (`float`, *optional*, defaults to 1.0):
++                Classifier-free guidance scale (``1.0`` disables CFG).
++            null_class_id (`int`, *optional*):
++                Null / dropped class id for the unconditional CFG branch.
+         """
+ 
++        if class_labels is not None:
++            class_labels = class_labels.to(device=self.device, dtype=torch.long).view(-1)
++            if class_labels.shape[0] != batch_size:
++                raise ValueError(
++                    f"class_labels batch {class_labels.shape[0]} != batch_size {batch_size}"
++                )
++            do_cfg = float(guidance_scale) != 1.0
++            if do_cfg and null_class_id is None:
++                raise ValueError("null_class_id is required when guidance_scale != 1")
++        else:
++            do_cfg = False
++
+         # Sample gaussian noise to begin loop
+         if isinstance(self.unet.config.sample_size, int):
+             image_shape = (
+@@ -100,7 +112,7 @@ class DDIMPipeline(DiffusionPipeline):
+                 f"You have passed a list of generators of length {len(generator)}, but requested an effective batch"
+                 f" size of {batch_size}. Make sure the batch size matches the length of the generators."
+             )
+-        
++
+         if isinstance(target_steps, torch.Tensor):
+             target_steps = target_steps.cpu().numpy()
+ 
+@@ -110,33 +122,30 @@ class DDIMPipeline(DiffusionPipeline):
+         self.scheduler.set_timesteps(num_inference_steps, target_steps)
+ 
+         for i, t in self.progress_bar(enumerate(self.scheduler.timesteps)):
+-            # 1. predict noise model_output
+-            model_output = self.unet(image, t.to(self.device)).sample
+-
+-            # if torch.isnan(model_output).any():
+-            #     print("WARNING: NaNs encountered in model output.")
++            t_dev = t.to(self.device)
++            if class_labels is None:
++                model_output = self.unet(image, t_dev).sample
++            elif not do_cfg:
++                model_output = self.unet(image, t_dev, class_labels=class_labels).sample
++            else:
++                null = torch.full_like(class_labels, int(null_class_id))
++                model_c = self.unet(image, t_dev, class_labels=class_labels).sample
++                model_u = self.unet(image, t_dev, class_labels=null).sample
++                model_output = model_u + float(guidance_scale) * (model_c - model_u)
+ 
+-            # 2. predict previous mean of image x_t-1 and add variance depending on eta
+-            # eta corresponds to η in paper and should be between [0, 1]
+-            # do x_t -> x_t-1
+             new_image = self.scheduler.step(
+                 model_output, t, image, eta=eta, use_clipped_model_output=use_clipped_model_output, generator=generator
+             ).prev_sample.type(self.unet.dtype)
+ 
+-            # 3. Update images with timestep different from the previous one
+             if i == 0:
+                 image = new_image
+             else:
+-                mask = t == self.scheduler.timesteps[i-1]
+-                # Make mask broadcastable
++                mask = t == self.scheduler.timesteps[i - 1]
+                 if not mask.shape:
+                     mask = mask[None]
+                 mask = mask.unsqueeze(1).unsqueeze(1).unsqueeze(1).to(new_image.device)
+                 image = torch.where(mask, image, new_image)
+ 
+-            # if torch.isnan(image).any():
+-            #     print("WARNING: NaNs encountered in image.")
+-
+         if output_type == "torch_raw":
+             return image
+ 
+@@ -145,7 +154,6 @@ class DDIMPipeline(DiffusionPipeline):
+         if output_type == "torch":
+             return image
+ 
+-        # image = image.clamp(0, 1)
+         image = image.cpu().permute(0, 2, 3, 1).numpy()
+         if output_type == "pil":
+             image = self.numpy_to_pil(image)
+@@ -153,4 +161,4 @@ class DDIMPipeline(DiffusionPipeline):
+         if not return_dict:
+             return (image,)
+ 
+-        return ImagePipelineOutput(images=image)
+\ No newline at end of file
++        return ImagePipelineOutput(images=image)
+diff --git a/train_cl.py b/train_cl.py
+index 5ed8b7a..f0dc0a9 100644
+--- a/train_cl.py
++++ b/train_cl.py
+@@ -51,12 +51,26 @@ from src.models.simple_cnn import SimpleCNN
+ def __parse_args() -> argparse.Namespace:
+     parser = argparse.ArgumentParser()
+     parser.add_argument("--dataset", type=str, default="split_cifar10",
+-                        choices=["split_cifar10", "split_fmnist", "split_mnist"],
++                        choices=["split_cifar10", "split_fmnist", "split_mnist",
++                                 "split_imagenet100"],
+                         help="Dataset to use for the benchmark")
+     parser.add_argument("--kld_clf_path", type=str, default="weights/cnn_fmnist/",
+-                        help="Path to the root directory of the KLD classifier weights")
++                        help="Path to Masip KLD CNN weights, or 'torchvision:resnet50' "
++                             "for ImageNet-100 ResNet50-V2 probe")
+     parser.add_argument("--image_size", type=int, default=32,
+                         help="Image size to use for the benchmark")
++    parser.add_argument(
++        "--latent_dir",
++        type=str,
++        default=os.path.expanduser("~/sandbox/tx_analysis_data/imagenet100/latents_sdvae_ft_mse_256"),
++        help="Cached SD-VAE latents for split_imagenet100 (train.pt / val.pt).",
++    )
++    parser.add_argument(
++        "--vae_id",
++        type=str,
++        default="stabilityai/sd-vae-ft-mse",
++        help="Frozen VAE used to decode latents to pixels for FID/KLD.",
++    )
+ 
+     parser.add_argument("--generator_type", type=str, default="diffusion",
+                         choices=["diffusion", "vae", "None"],
+@@ -100,10 +114,49 @@ def __parse_args() -> argparse.Namespace:
+                         help="Name of the wandb project")
+     parser.add_argument("--wandb", action="store_true", default=False,
+                         help="Use wandb for logging")
++    parser.add_argument(
++        "--class_conditional",
++        action="store_true",
++        default=False,
++        help="Class-conditional diffusion (UNet num_class_embeds + CFG). "
++             "Recommended for split_imagenet100 to match the FM table protocol.",
++    )
++    parser.add_argument(
++        "--n_experiences",
++        type=int,
++        default=None,
++        help="Number of CL tasks. Default: 5 (FMNIST/CIFAR/Masip ImageNet), "
++             "or 3 when --class_conditional on split_imagenet100.",
++    )
++    parser.add_argument(
++        "--label_dropout",
++        type=float,
++        default=0.1,
++        help="Label dropout for CFG training (class-conditional only).",
++    )
++    parser.add_argument(
++        "--guidance_scale",
++        type=float,
++        default=1.5,
++        help="CFG scale for class-conditional sampling (eval). Replay uses 1.0.",
++    )
++    parser.add_argument(
++        "--num_classes",
++        type=int,
++        default=None,
++        help="Override class count for class-conditional UNet "
++             "(default: 100 for ImageNet-100, 10 otherwise).",
++    )
+     return parser.parse_args()
+ 
+ 
+-def get_benchmark(dataset: str, image_size: int, seed: int):
++def get_benchmark(
++    dataset: str,
++    image_size: int,
++    seed: int,
++    latent_dir: str = None,
++    n_experiences: int = None,
++):
+     if dataset == "split_cifar10":
+         train_transform = transforms.Compose(
+             [
+@@ -124,14 +177,49 @@ def get_benchmark(dataset: str, image_size: int, seed: int):
+                                     (0.5, 0.5, 0.5)),
+             ]
+         )
++        n_exp = int(n_experiences) if n_experiences is not None else 5
+         benchmark = SplitCIFAR10(
+-            n_experiences=5,
++            n_experiences=n_exp,
+             seed=seed,
+             train_transform=train_transform,
+             eval_transform=test_transform,
+         )
+         return benchmark
+ 
++    if dataset == "split_imagenet100":
++        # Latent-space benchmark: the diffusion model is trained on the same
++        # frozen SD-VAE latents (4x32x32) as the flow-matching pipeline, and
++        # samples are decoded back to 256x256 RGB for FID/KLD.
++        from pathlib import Path
++
++        import torch
++        from avalanche.benchmarks.generators import dataset_benchmark, nc_benchmark
++        from src.common.latent_data import (
++            LatentTensorDataset,
++            class_tasks_for_seed,
++            load_imagenet100_latents,
++        )
++
++        root = latent_dir or os.path.expanduser(
++            "~/sandbox/tx_analysis_data/imagenet100/latents_sdvae_ft_mse_256"
++        )
++        train_ds, test_ds, synsets, scaling = load_imagenet100_latents(
++            root, random_hflip=True
++        )
++        config_dir = str(Path(__file__).resolve().parent / "configs")
++        # Same task class sets as FM ``class_order_for_seed`` (5×20 frozen JSON,
++        # or Avalanche NC shuffle for 3 → 34/33/33 — never rechunk the 5×20 concat).
++        n_exp = int(n_experiences) if n_experiences is not None else 5
++        if n_exp < 1 or n_exp > 100:
++            raise ValueError(f"n_experiences must be in [1, 100], got {n_exp}")
++        tasks = class_tasks_for_seed(config_dir, seed, n_experiences=n_exp)
++        sizes = [len(t) for t in tasks]
++        print(
++            f"ImageNet-100 class split seed={seed} n_experiences={n_exp} "
++            f"sizes={sizes} (harmonized with FM)"
++        )
++
++        if len(set(sizes)) == 1:
++            fixed_order = [c for task in tasks for c in task]
++            benchmark = nc_benchmark(
++                train_dataset=train_ds,
++                test_dataset=test_ds,
++                n_experiences=n_exp,
++                task_labels=False,
++                seed=seed,
++                fixed_class_order=fixed_order,
++            )
++        else:
++            def _subset_by_classes(ds: LatentTensorDataset, classes: list[int]) -> LatentTensorDataset:
++                class_tensor = torch.tensor(classes, dtype=torch.long)
++                mask = torch.isin(ds.y, class_tensor)
++                return LatentTensorDataset(
++                    ds.z[mask],
++                    ds.y[mask],
++                    random_hflip=bool(ds.random_hflip),
++                )
++
++            train_datasets = [_subset_by_classes(train_ds, c) for c in tasks]
++            test_datasets = [_subset_by_classes(test_ds, c) for c in tasks]
++            benchmark = dataset_benchmark(train_datasets, test_datasets)
++
++        # Metadata consumed downstream by the KLD probe and the VAE decoder.
++        benchmark.imagenet100_synsets = list(synsets)
++        benchmark.latent_scaling_factor = scaling
++        benchmark.is_latent = True
++        return benchmark
++
+     train_transform = transforms.Compose(
+         [
+             transforms.Resize((image_size, image_size), antialias=True),
+@@ -140,16 +228,17 @@ def get_benchmark(dataset: str, image_size: int, seed: int):
+         ]
+     )
+     
++    n_exp = int(n_experiences) if n_experiences is not None else 5
+     if dataset == "split_fmnist":
+         benchmark = SplitFMNIST(
+-            n_experiences=5,
++            n_experiences=n_exp,
+             seed=seed,
+             train_transform=train_transform,
+             eval_transform=train_transform,
+         )
+     elif dataset == "split_mnist":
+         benchmark = SplitMNIST(
+-            n_experiences=5,
++            n_experiences=n_exp,
+             seed=seed,
+             train_transform=train_transform,
+             eval_transform=train_transform,
+@@ -172,6 +261,14 @@ def get_generator_strategy(
+         lambd: float = 1.0, 
+         checkpoint_plugin=None,
+         kld_clf_path: str = "weights/cnn_fmnist/",
++        kld_num_classes: int = 10,
++        kld_classifier_backend: str = "masip_resnet18",
++        kld_synsets=None,
++        to_pixels=None,
++        class_conditional: bool = False,
++        num_classes: int = 0,
++        label_dropout: float = 0.1,
++        guidance_scale: float = 1.5,
+         ):
+     generator_strategy = None
+ 
+@@ -180,7 +277,7 @@ def get_generator_strategy(
+         plugins.append(checkpoint_plugin)
+ 
+     if generator_type == "diffusion":
+-        generator_model = UNet2DModel(
++        unet_kwargs = dict(
+             sample_size=model_config.model.input_size,
+             in_channels=model_config.model.in_channels,
+             out_channels=model_config.model.out_channels,
+@@ -190,10 +287,43 @@ def get_generator_strategy(
+             down_block_types=model_config.model.down_block_types,
+             up_block_types=model_config.model.up_block_types,
+         )
++        # Optional attention_head_dim (large ImageNet UNets).
++        if getattr(model_config.model, "attention_head_dim", None) is not None:
++            unet_kwargs["attention_head_dim"] = model_config.model.attention_head_dim
++        null_class_id = None
++        if class_conditional:
++            n_cls = int(num_classes)
++            if n_cls < 1:
++                raise ValueError("class_conditional requires num_classes >= 1")
++            # +1 null class for CFG / label dropout.
++            unet_kwargs["num_class_embeds"] = n_cls + 1
++            null_class_id = n_cls
++        generator_model = UNet2DModel(**unet_kwargs)
++        # The schedule has zero terminal SNR, so alphas_cumprod[999] == 0 and the
++        # x0 prediction at the first inference step divides by zero. Clipping is
++        # what keeps that finite, so it must stay on -- but the range has to match
++        # the data scale: 1.0 for pixels, ~8 for SD-VAE latents (std 0.83).
++        clip_sample = model_config.scheduler.clip_sample
++        if clip_sample is None:
++            clip_sample = True
++        clip_sample_range = model_config.scheduler.clip_sample_range
++        if clip_sample_range is None:
++            clip_sample_range = 1.0
+         noise_scheduler = DDIMScheduler(
+-            num_train_timesteps=model_config.scheduler.train_timesteps)
+-        wrap_in_pipeline(generator_model, noise_scheduler,
+-                         DDIMPipeline, generation_steps, eta, def_output_type="torch_raw")
++            num_train_timesteps=model_config.scheduler.train_timesteps,
++            clip_sample=bool(clip_sample),
++            clip_sample_range=float(clip_sample_range),
++        )
++        wrap_in_pipeline(
++            generator_model,
++            noise_scheduler,
++            DDIMPipeline,
++            generation_steps,
++            eta,
++            def_output_type="torch_raw",
++            null_class_id=null_class_id,
++            default_guidance_scale=float(guidance_scale) if class_conditional else 1.0,
++        )
+         gen_eval_plugin = EvaluationPlugin(
+             loss_metrics(
+                 minibatch=True,
+@@ -216,7 +346,17 @@ def get_generator_strategy(
+                 experience=True,
+                 stream=True,
+             ),
+-            DiffusionMetricsMetric(device=device, weights_path=kld_clf_path),
++            DiffusionMetricsMetric(
++                device=device,
++                weights_path=kld_clf_path,
++                # Matches --fid-test-samples on the flow-matching side; lower it
++                # via MASIP_METRIC_N_SAMPLES for smoke runs.
++                n_samples=int(os.environ.get("MASIP_METRIC_N_SAMPLES", 10000)),
++                num_classes=kld_num_classes,
++                classifier_backend=kld_classifier_backend,
++                synsets=kld_synsets,
++                to_pixels=to_pixels,
++            ),
+             loggers=loggers,
+         )
+ 
+@@ -452,6 +592,20 @@ def get_generator_strategy(
+         raise NotImplementedError(
+             f"Generator type {generator_type} not implemented")
+ 
++    if to_pixels is not None:
++        # Keep samples in latent space; the metrics hook decodes them.
++        generator_strategy.sample_output_type = "torch_raw"
++
++    if generator_strategy is not None and class_conditional:
++        generator_strategy.use_class_conditioning = True
++        generator_strategy.null_class_id = int(num_classes)
++        generator_strategy.label_dropout = float(label_dropout)
++        generator_strategy.guidance_scale = float(guidance_scale)
++        print(
++            f"Class-conditional diffusion: num_classes={num_classes} "
++            f"label_dropout={label_dropout} guidance_scale={guidance_scale}"
++        )
++
+     return generator_strategy
+ 
+ 
+@@ -585,10 +739,28 @@ def get_solver_strategy(solver_type: str, model_config, strategy_config, generat
+     return cl_strategy
+ 
+ 
++def _disable_fused_sdpa_if_needed():
++    """torch 2.0.1's flash / mem-efficient attention kernels miscompile on sm_90
++    (H100): the UNet backward dies with "GET was unable to find an engine" or an
++    illegal instruction. The math fallback is correct on every arch and the
++    attention blocks here are tiny (8x8 and 4x4), so the cost is negligible.
++    Set DISABLE_FUSED_SDPA=0 to keep the fused kernels.
++    """
++    if os.environ.get("DISABLE_FUSED_SDPA", "1") != "1":
++        return
++    if not hasattr(torch.backends.cuda, "enable_flash_sdp"):
++        return
++    torch.backends.cuda.enable_flash_sdp(False)
++    torch.backends.cuda.enable_mem_efficient_sdp(False)
++    torch.backends.cuda.enable_math_sdp(True)
++    print("DISABLE_FUSED_SDPA=1: using math attention kernels")
++
++
+ def run_experiment(args, seed: int, device: torch.device):
+     # --- SEEDING
+     RNGManager.set_random_seeds(seed)
+     torch.backends.cudnn.deterministic = True
++    _disable_fused_sdpa_if_needed()
+     
+     run_name = "gr"
+ 
+@@ -596,6 +768,11 @@ def run_experiment(args, seed: int, device: torch.device):
+         generator_config = get_configuration(args.generator_config_path)
+         generator_strategy_config = get_configuration(args.generator_strategy_config_path)
+         run_name += f"_{args.generator_type}_{generator_strategy_config.strategy}_steps_{args.generation_steps}_lambd_{args.lambd}"
++        if bool(getattr(args, "class_conditional", False)):
++            n_exp = args.n_experiences if args.n_experiences is not None else (
++                3 if args.dataset == "split_imagenet100" else 5
++            )
++            run_name += f"_cc_e{n_exp}_gs{args.guidance_scale}"
+     else: 
+         generator_config = None
+         generator_strategy_config = None
+@@ -625,7 +802,49 @@ def run_experiment(args, seed: int, device: torch.device):
+     
+     # --- BENCHMARK CREATION
+     image_size = args.image_size
+-    benchmark = get_benchmark(args.dataset, image_size, seed)
++    class_conditional = bool(getattr(args, "class_conditional", False))
++    if args.n_experiences is not None:
++        n_experiences = int(args.n_experiences)
++    elif class_conditional and args.dataset == "split_imagenet100":
++        n_experiences = 3  # match locked FM ImageNet protocol
++    else:
++        n_experiences = 5
++    if class_conditional:
++        if args.num_classes is not None:
++            num_classes = int(args.num_classes)
++        elif args.dataset == "split_imagenet100":
++            num_classes = 100
++        else:
++            num_classes = 10
++    else:
++        num_classes = 0
++    benchmark = get_benchmark(
++        args.dataset,
++        image_size,
++        seed,
++        latent_dir=getattr(args, "latent_dir", None),
++        n_experiences=n_experiences,
++    )
++
++    kld_num_classes = 10
++    kld_classifier_backend = "masip_resnet18"
++    kld_synsets = None
++    to_pixels = None
++    if args.dataset == "split_imagenet100":
++        kld_num_classes = 100
++        kld_classifier_backend = "torchvision_resnet50"
++        kld_synsets = list(getattr(benchmark, "imagenet100_synsets", []))
++        if not kld_synsets:
++            raise RuntimeError("split_imagenet100 benchmark missing imagenet100_synsets")
++        from src.common.latent_data import FrozenLatentDecoder
++
++        to_pixels = FrozenLatentDecoder(
++            vae_id=args.vae_id,
++            device=device,
++            scaling_factor=getattr(benchmark, "latent_scaling_factor", 0.18215),
++            batch_size=32,
++        )
++
+ 
+     # --- LOGGER CREATION
+     loggers = []
+@@ -658,7 +877,7 @@ def run_experiment(args, seed: int, device: torch.device):
+     # If it does not exist, strategy will be None and initial_exp will be 0
+     strategy, initial_exp = checkpoint_plugin.load_checkpoint_if_exists()
+ 
+-    if initial_exp > 4:
++    if initial_exp > n_experiences - 1:
+         print(f"Experiment with seed {seed} already completed")
+         return
+ 
+@@ -684,6 +903,14 @@ def run_experiment(args, seed: int, device: torch.device):
+                 checkpoint_plugin=checkpoint_plugin if args.solver_type is None or args.solver_type == "None" else None,
+                 lambd=args.lambd,
+                 kld_clf_path=args.kld_clf_path,
++                kld_num_classes=kld_num_classes,
++                kld_classifier_backend=kld_classifier_backend,
++                kld_synsets=kld_synsets,
++                to_pixels=to_pixels,
++                class_conditional=class_conditional,
++                num_classes=num_classes,
++                label_dropout=float(args.label_dropout),
++                guidance_scale=float(args.guidance_scale),
+             )
+ 
+         if args.solver_type is None or args.solver_type == "None":
+@@ -718,15 +945,19 @@ def run_experiment(args, seed: int, device: torch.device):
+         if generator_strategy is not None:
+             print("Computing generated samples and saving them to disk")
+             generate_diffusion_samples(output_dir, n_samples, experience.current_experience,
+-                            generator_strategy.model, seed=args.seed, generation_steps=args.generation_steps, eta=args.eta)
++                            generator_strategy.model, seed=args.seed, generation_steps=args.generation_steps, eta=args.eta,
++                            to_pixels=to_pixels)
+ 
+     print("Evaluation completed")
+ 
+     with open(os.path.join(output_dir, "completed.txt"), "w") as f:
+         f.write(":)")
+ 
+-    # Remove checkpoints
+-    os.system(f"rm -rf {os.path.join(output_dir, 'checkpoints')}")
++    # Remove checkpoints (set KEEP_CHECKPOINTS=1 to retain for debugging / restarts)
++    if os.environ.get("KEEP_CHECKPOINTS", "0") != "1":
++        os.system(f"rm -rf {os.path.join(output_dir, 'checkpoints')}")
++    else:
++        print(f"KEEP_CHECKPOINTS=1: retaining {os.path.join(output_dir, 'checkpoints')}")
+ 
+ 
+ def main(args):

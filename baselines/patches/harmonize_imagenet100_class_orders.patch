@@ -1,0 +1,78 @@
+--- a/src/common/latent_data.py
++++ b/src/common/latent_data.py
+@@ -75,7 +75,13 @@
+ 
+ 
+ def load_class_orders(config_dir, seed, n_experiences=5):
+-    """Frozen per-seed class order shared with the flow-matching split."""
++    """Frozen per-seed 5×20 class order shared with the flow-matching split.
++
++    ``n_experiences`` is accepted for API compatibility; the JSON only stores
++    the Masip 5×20 table. For other experience counts use
++    ``class_tasks_for_seed``.
++    """
++    del n_experiences  # JSON is always the 5×20 Masip table.
+     path = os.path.join(config_dir, "imagenet100_class_orders.json")
+     with open(path) as fh:
+         orders = json.load(fh)
+@@ -86,6 +92,60 @@
+             f"Known: {sorted(orders['fixed_class_order'])}"
+         )
+     return orders["fixed_class_order"][key], orders["tasks"][key]
++
++
++def _nearly_equal_chunk_sizes(n_classes, n_experiences):
++    """Class counts per task; remainder goes to the first tasks (100/3 → 34/33/33)."""
++    base = n_classes // n_experiences
++    rem = n_classes % n_experiences
++    return [base + (1 if i < rem else 0) for i in range(n_experiences)]
++
++
++def avalanche_nc_class_tasks(seed, n_classes=100, n_experiences=3):
++    """Avalanche ``NCScenario`` shuffle + nearly-equal chunks; classes sorted per task.
++
++    Must stay bit-identical to
++    ``trajectory_replay.data.split_imagenet._avalanche_nc_class_tasks``.
++    """
++    if n_classes < 1:
++        raise ValueError(f"n_classes must be >= 1, got {n_classes}")
++    if n_experiences < 1:
++        raise ValueError(f"n_experiences must be >= 1, got {n_experiences}")
++    if n_experiences > n_classes:
++        raise ValueError(
++            f"n_experiences={n_experiences} exceeds n_classes={n_classes}"
++        )
++    order = list(range(n_classes))
++    rng_state = torch.random.get_rng_state()
++    try:
++        torch.random.manual_seed(int(seed))
++        order = torch.as_tensor(order)[torch.randperm(len(order))].tolist()
++    finally:
++        torch.random.set_rng_state(rng_state)
++    sizes = _nearly_equal_chunk_sizes(n_classes, n_experiences)
++    out = []
++    idx = 0
++    for size in sizes:
++        out.append(sorted(order[idx : idx + size]))
++        idx += size
++    return out
++
++
++def class_tasks_for_seed(config_dir, seed, n_experiences=5, n_classes=100):
++    """Per-task class lists matching the FM ImageNet protocol.
++
++    - ``n_experiences=5`` (recorded Masip seeds): frozen JSON 5×20 table.
++    - otherwise (including locked FM ``n_experiences=3`` → 34/33/33): Avalanche
++      NC shuffle + nearly-equal chunking, identical to FM ``class_order_for_seed``.
++    """
++    n_exp = int(n_experiences)
++    if n_classes == 100 and n_exp == 5:
++        _, tasks = load_class_orders(config_dir, seed, n_experiences=5)
++        return [list(task) for task in tasks]
++    return avalanche_nc_class_tasks(
++        seed, n_classes=int(n_classes), n_experiences=n_exp
++    )
++
+ 
+ class FrozenLatentDecoder:
+     """Frozen SD-VAE decoder: scaled latents -> RGB ``[-1, 1]`` at 256x256."""

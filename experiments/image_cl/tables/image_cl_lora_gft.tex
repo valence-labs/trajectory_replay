@@ -1,0 +1,37 @@
+% Requires \usepackage[table]{xcolor}, \usepackage{booktabs}, and \usepackage{graphicx}.
+\begin{table*}[t]
+\centering
+\definecolor{trajectoryrow}{HTML}{E5EEF3}
+\setlength{\tabcolsep}{4.5pt}
+\small
+\caption{Memory-free baselines for class-incremental image generation.
+Final-stream means with standard errors over three seeds after five tasks
+(Fashion-MNIST and CIFAR-10) or three tasks (ImageNet-100). LoRA uses
+$\alpha=2r$; GFT decays the teacher-regularization weight $\beta$ from 1 to 0.
+Blue rows show trajectory-replay references (adaptive or equal-task $\lambda$;
+MF-$N$ uses $N$ replay steps). Lower is better.}
+\label{tab:image_cl_lora_gft}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+Method & \multicolumn{2}{c}{Fashion-MNIST} & \multicolumn{2}{c}{CIFAR-10} & ImageNet-100 \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(l){6-6}
+& $\downarrow$ FID & $\downarrow$ KLD & $\downarrow$ FID & $\downarrow$ KLD & $\downarrow$ FID \\
+\midrule
+LoRA ($r{=}8$, $\alpha{=}16$) & $68.4$ {\scriptsize $(\pm\,11.1)$} & $4.508$ {\scriptsize $(\pm\,1.956)$} & $50.9$ {\scriptsize $(\pm\,3.4)$} & $1.006$ {\scriptsize $(\pm\,0.114)$} & $109.8$ {\scriptsize $(\pm\,0.5)$} \\
+LoRA ($r{=}16$, $\alpha{=}32$) & $67.3$ {\scriptsize $(\pm\,10.9)$} & $5.129$ {\scriptsize $(\pm\,2.154)$} & $50.2$ {\scriptsize $(\pm\,3.2)$} & $1.055$ {\scriptsize $(\pm\,0.123)$} & $107.6$ {\scriptsize $(\pm\,0.9)$} \\
+LoRA ($r{=}32$, $\alpha{=}64$) & $66.2$ {\scriptsize $(\pm\,11.2)$} & $5.107$ {\scriptsize $(\pm\,2.146)$} & $50.0$ {\scriptsize $(\pm\,3.0)$} & $1.069$ {\scriptsize $(\pm\,0.115)$} & $104.6$ {\scriptsize $(\pm\,2.3)$} \\
+\midrule
+GFT (sigmoid $\beta$ schedule) & $65.1$ {\scriptsize $(\pm\,12.0)$} & $4.264$ {\scriptsize $(\pm\,1.309)$} & $50.7$ {\scriptsize $(\pm\,4.0)$} & $1.138$ {\scriptsize $(\pm\,0.171)$} & $119.5$ {\scriptsize $(\pm\,2.7)$} \\
+GFT (linear $\beta$ schedule) & $65.8$ {\scriptsize $(\pm\,12.8)$} & $4.873$ {\scriptsize $(\pm\,2.188)$} & $51.0$ {\scriptsize $(\pm\,4.3)$} & $1.101$ {\scriptsize $(\pm\,0.176)$} & $119.1$ {\scriptsize $(\pm\,3.4)$} \\
+\midrule
+\rowcolor{trajectoryrow} Trajectory replay (ODE, adaptive $\lambda$) & $21.1$ {\scriptsize $(\pm\,3.6)$} & $0.190$ {\scriptsize $(\pm\,0.090)$} & $31.4$ {\scriptsize $(\pm\,0.9)$} & $0.272$ {\scriptsize $(\pm\,0.055)$} & $70.0$ {\scriptsize $(\pm\,5.8)$} \\
+\rowcolor{trajectoryrow} Trajectory replay (ODE, equal-task $\lambda$) & $22.1$ {\scriptsize $(\pm\,3.2)$} & $0.068$ {\scriptsize $(\pm\,0.039)$} & $38.6$ {\scriptsize $(\pm\,3.5)$} & $0.237$ {\scriptsize $(\pm\,0.066)$} & $70.4$ {\scriptsize $(\pm\,9.2)$} \\
+\rowcolor{trajectoryrow} Trajectory replay (MF-1, adaptive $\lambda$) & $20.2$ {\scriptsize $(\pm\,2.2)$} & $0.140$ {\scriptsize $(\pm\,0.008)$} & $33.3$ {\scriptsize $(\pm\,0.5)$} & $0.332$ {\scriptsize $(\pm\,0.066)$} & $70.7$ {\scriptsize $(\pm\,5.3)$} \\
+\rowcolor{trajectoryrow} Trajectory replay (MF-1, equal-task $\lambda$) & $24.2$ {\scriptsize $(\pm\,0.8)$} & $0.065$ {\scriptsize $(\pm\,0.027)$} & $36.8$ {\scriptsize $(\pm\,1.2)$} & $0.237$ {\scriptsize $(\pm\,0.089)$} & $83.0$ {\scriptsize $(\pm\,9.3)$} \\
+\rowcolor{trajectoryrow} Trajectory replay (MF-4, adaptive $\lambda$) & $18.4$ {\scriptsize $(\pm\,1.5)$} & $0.120$ {\scriptsize $(\pm\,0.023)$} & $33.5$ {\scriptsize $(\pm\,1.7)$} & $0.349$ {\scriptsize $(\pm\,0.056)$} & $71.1$ {\scriptsize $(\pm\,2.7)$} \\
+\rowcolor{trajectoryrow} Trajectory replay (MF-4, equal-task $\lambda$) & $18.0$ {\scriptsize $(\pm\,1.7)$} & $0.090$ {\scriptsize $(\pm\,0.030)$} & $35.1$ {\scriptsize $(\pm\,3.1)$} & $0.211$ {\scriptsize $(\pm\,0.023)$} & $75.3$ {\scriptsize $(\pm\,6.8)$} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

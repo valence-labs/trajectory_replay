@@ -218,3 +218,45 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local datasets and run outputs (often symlinks)
+data_dir
+results_dir
+
+# Slurm job logs
+sbatch/logs/
+
+# Optional VCB checkout (see README)
+external/
+
+# Third-party baseline clones (track pins, patches, and README only)
+baselines/diffusion_continual_learning/
+baselines/**/results/
+baselines/**/.venv/
+baselines/**/uv.lock
+baselines/**/__pycache__/
+
+# Third-party tooling clones
+third_party/arc-state/
+third_party/scimilarity/
+third_party/**/.venv/
+third_party/**/uv.lock
+third_party/**/__pycache__/
+.uv-cache/
+
+# Downloaded model weights
+data/arc_state/**/.cache/
+data/arc_state/**/*.ckpt
+data/arc_state/**/*.safetensors
+data/arc_state/**/*.pt
+data/arc_state/**/*.bin
+data/arc_state/**/*.incomplete
+data/scimilarity/**/*.ckpt
+data/scimilarity/**/*.tar.gz
+data/scimilarity/**/.stage.*/
+data/scimilarity/model/
+
+# Local caches and generated images
+.cache/
+**/torch_fidelity_cache/
+outputs/

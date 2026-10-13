@@ -1,0 +1,10 @@
+ImageNet-100 class list (100 WordNet synset IDs).
+
+Source: Contrastive Multiview Coding (Tian et al., 2019)
+  Paper: https://arxiv.org/abs/1906.05849
+  File:  https://github.com/HobbitLong/CMC/blob/master/imagenet100.txt
+
+Not an official ILSVRC release. Use this list to filter ImageNet-1k
+train/val folders into an ImageNet-100 subset for CL experiments.
+
+Downloaded: 2026-08-05

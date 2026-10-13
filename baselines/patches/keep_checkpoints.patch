@@ -1,0 +1,19 @@
+# Keep Avalanche checkpoints when KEEP_CHECKPOINTS=1 (Masip deletes them by default).
+# Apply after re-clone:
+#   patch -p1 -d baselines/diffusion_continual_learning < baselines/patches/keep_checkpoints.patch
+--- a/train_cl.py
++++ b/train_cl.py
+@@ -726,8 +726,11 @@ def run_experiment(args, seed: int, device: torch.device):
+     with open(os.path.join(output_dir, "completed.txt"), "w") as f:
+         f.write(":)")
+ 
+-    # Remove checkpoints
+-    os.system(f"rm -rf {os.path.join(output_dir, 'checkpoints')}")
++    # Remove checkpoints (set KEEP_CHECKPOINTS=1 to retain for debugging / restarts)
++    if os.environ.get("KEEP_CHECKPOINTS", "0") != "1":
++        os.system(f"rm -rf {os.path.join(output_dir, 'checkpoints')}")
++    else:
++        print(f"KEEP_CHECKPOINTS=1: retaining {os.path.join(output_dir, 'checkpoints')}")
+ 
+ 
+ def main(args):

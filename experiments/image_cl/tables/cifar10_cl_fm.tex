@@ -1,0 +1,28 @@
+\begin{table}[t]
+\centering
+\caption{Continual learning on Split CIFAR-10 after the final task. Reported is mean {\scriptsize$\pm$} standard error over three seeds; lower is better.}
+\label{tab:cifar10_cl_fm}
+\begin{tabular}{lcc}
+\toprule
+Strategy & $\downarrow$ FID & $\downarrow$ KLD \\
+\midrule
+Naive fine-tuning & $51.2$ {\scriptsize $(\pm\,4.0)$} & $1.189$ {\scriptsize $(\pm\,0.172)$} \\
+\midrule
+Generative replay (ODE, adaptive $\lambda$) & $43.3$ {\scriptsize $(\pm\,2.3)$} & $0.501$ {\scriptsize $(\pm\,0.046)$} \\
+Generative replay (ODE, $\lambda$-equal) & $92.4$ {\scriptsize $(\pm\,15.0)$} & $0.737$ {\scriptsize $(\pm\,0.203)$} \\
+\midrule
+Generative replay (MeanFlow $N{=}1$, adaptive $\lambda$) & $55.8$ {\scriptsize $(\pm\,7.7)$} & $0.531$ {\scriptsize $(\pm\,0.081)$} \\
+Generative replay (MeanFlow $N{=}1$, equal-task $\lambda$) & $180.2$ {\scriptsize $(\pm\,37.4)$} & $0.700$ {\scriptsize $(\pm\,0.254)$} \\
+Generative replay (MeanFlow $N{=}4$, adaptive $\lambda$) & $45.2$ {\scriptsize $(\pm\,1.4)$} & $0.508$ {\scriptsize $(\pm\,0.044)$} \\
+Generative replay (MeanFlow $N{=}4$, equal-task $\lambda$) & $113.1$ {\scriptsize $(\pm\,14.4)$} & $0.265$ {\scriptsize $(\pm\,0.066)$} \\
+\midrule
+Trajectory replay (ODE, adaptive $\lambda$) & $31.4$ {\scriptsize $(\pm\,0.9)$} & $0.272$ {\scriptsize $(\pm\,0.055)$} \\
+Trajectory replay (ODE, $\lambda$-equal) & $38.6$ {\scriptsize $(\pm\,3.5)$} & $0.237$ {\scriptsize $(\pm\,0.066)$} \\
+\midrule
+Trajectory replay (MeanFlow $N{=}1$, adaptive $\lambda$) & $33.3$ {\scriptsize $(\pm\,0.5)$} & $0.332$ {\scriptsize $(\pm\,0.066)$} \\
+Trajectory replay (MeanFlow $N{=}1$, equal-task $\lambda$) & $36.8$ {\scriptsize $(\pm\,1.2)$} & $0.237$ {\scriptsize $(\pm\,0.089)$} \\
+Trajectory replay (MeanFlow $N{=}4$, adaptive $\lambda$) & $33.5$ {\scriptsize $(\pm\,1.7)$} & $0.349$ {\scriptsize $(\pm\,0.056)$} \\
+Trajectory replay (MeanFlow $N{=}4$, equal-task $\lambda$) & $35.1$ {\scriptsize $(\pm\,3.1)$} & $0.211$ {\scriptsize $(\pm\,0.023)$} \\
+\bottomrule
+\end{tabular}
+\end{table}

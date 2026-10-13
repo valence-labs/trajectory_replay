@@ -1,0 +1,40 @@
+% Requires \usepackage{booktabs} and \usepackage{graphicx}.
+\begin{table*}[t]
+\centering
+\small
+\caption{\textbf{Transcriptomics architecture-selection diagnostics.} Panel (a) reports single-seed selection-only PCA pilots and observed-latent reconstruction ceilings; every PCA-width pilot fixes the CFM backbone to an MLP with width 1024 and depth 4. These exploratory scores predate the fixed-generation benchmark protocol and are not directly comparable to the final continual-learning tables. Variance is cumulative PCA variance explained, Oracle is Pearson $\Delta$ after decoding observed PCA latents, and Recon.\ is mean per-cell reconstruction correlation. Panel (b) compares model capacity under the final sequential protocol with exactly $K=500$ generated cells per non-control stratum. All rows use seed 42. Bold denotes the selected configuration.}
+\label{tab:tx_architecture_selection}
+\textbf{(a) PCA width and reconstruction ceiling (fixed MLP $1024{\times}4$)}\\[2pt]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llccccc@{}}
+\toprule
+Dataset & PCA width & Variance & Pilot fit $\Delta$ & Pilot heldout $\Delta$ & Oracle heldout $\Delta$ & Recon.\ $r$ \\
+\midrule
+Replogle & \textbf{50} & 0.342 & \textbf{0.486} & \textbf{0.374} & 0.606 & 0.792 \\
+Replogle & 100 & 0.377 & 0.458 & 0.373 & 0.644 & 0.816 \\
+Replogle & 256 & -- & 0.423 & 0.373 & 0.713 & 0.847 \\
+Replogle & 512 & 0.589 & 0.389 & 0.352 & 0.794 & 0.886 \\
+\midrule
+PBMC & 50 & 0.501 & 0.353 & 0.263 & -- & -- \\
+PBMC & \textbf{100} & 0.584 & \textbf{0.352} & \textbf{0.268} & 0.675 & 0.773 \\
+PBMC & 256 & 0.742 & 0.282 & 0.236 & -- & -- \\
+PBMC & 512 & 0.873 & 0.263 & 0.235 & -- & -- \\
+\bottomrule
+\end{tabular}%
+}
+\vspace{6pt}
+\textbf{(b) Final-protocol model-capacity check ($K=500$)}\\[2pt]
+\begin{tabular}{@{}llccccc@{}}
+\toprule
+Dataset & Backbone & Width & Depth & $\uparrow$ Fit $\Delta$ & $\uparrow$ Retention $\Delta$ & $\uparrow$ Heldout $\Delta$ \\
+\midrule
+Replogle & \textbf{MLP} & \textbf{2048} & \textbf{4} & \textbf{0.611} & \textbf{0.608} & \textbf{0.410} \\
+Replogle & Residual MLP & 2048 & 6 & 0.599 & 0.609 & 0.392 \\
+\midrule
+PBMC & MLP & 4096 & 4 & 0.546 & 0.441 & 0.297 \\
+PBMC & MLP & 3072 & 4 & 0.528 & 0.443 & 0.308 \\
+PBMC & Residual MLP & 3072 & 6 & 0.532 & 0.455 & 0.352 \\
+PBMC & \textbf{Residual MLP} & \textbf{2048} & \textbf{6} & \textbf{0.514} & \textbf{0.445} & \textbf{0.355} \\
+\bottomrule
+\end{tabular}
+\end{table*}

@@ -1,0 +1,7 @@
+label	path	stage
+pretrain	pbmc_split1_pretrain	pretrain
+pretrain_all_donors	pbmc_split1_pretrain_all_donors	pretrain
+lora_r4_a8	sweep_lora/pbmc_split1_finetune_lora_r4_a8	finetune
+lora_r8_a16	sweep_lora/pbmc_split1_finetune_lora_r8_a16	finetune
+lora_r8_a16_out	sweep_lora/pbmc_split1_finetune_lora_r8_a16_out	finetune
+lora_r16_a32	sweep_lora/pbmc_split1_finetune_lora_r16_a32	finetune

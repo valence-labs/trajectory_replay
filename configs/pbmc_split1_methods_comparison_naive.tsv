@@ -1,0 +1,8 @@
+label	path	stage
+pretrain	pbmc_split1_pretrain	pretrain
+pretrain_all_donors	pbmc_split1_pretrain_all_donors	pretrain
+vf0_emb0	naive_ft/pbmc_split1_finetune_vf0_emb0	finetune
+vf1_emb1	naive_ft/pbmc_split1_finetune_vf1_emb1	finetune
+vf1_pert1_ctx0	naive_ft/pbmc_split1_finetune_vf1_pert1_ctx0	finetune
+vf0_pert1_ctx1	naive_ft/pbmc_split1_finetune_vf0_pert1_ctx1	finetune
+vf1_pert0_ctx1	naive_ft/pbmc_split1_finetune_vf1_pert0_ctx1	finetune

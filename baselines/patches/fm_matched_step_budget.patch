@@ -1,0 +1,48 @@
+# Match Masip ImageNet-100 optimizer updates to the locked FM recipe (~100k
+# Adam steps/experience). When a strategy JSON sets
+# ``target_steps_per_experience``, recompute ``train_epochs`` from the actual
+# Avalanche experience size (and the growing union under cumulative).
+# Apply after the other ImageNet patches:
+#   patch -p1 -d baselines/diffusion_continual_learning < baselines/patches/fm_matched_step_budget.patch
+--- a/train_cl.py
++++ b/train_cl.py
+@@ -1,5 +1,6 @@
+ import os
+ import argparse
++import math
+ import torch
+ import torch.optim.lr_scheduler
+ 
+@@ -961,6 +962,34 @@ def run_experiment(args, seed: int, device: torch.device):
+     # TRAINING LOOP
+     print("Starting experiment...")
+     n_samples = 100
+     for experience in benchmark.train_stream[initial_exp:]:
+         print("Start of experience ", experience.current_experience)
++        target_steps = getattr(
++            generator_strategy_config, "target_steps_per_experience", None
++        )
++        if target_steps is not None:
++            exp_id = int(experience.current_experience)
++            if generator_strategy_config.strategy == "cumulative":
++                n_train = sum(
++                    len(benchmark.train_stream[i].dataset)
++                    for i in range(exp_id + 1)
++                )
++            else:
++                n_train = len(experience.dataset)
++            steps_per_epoch = math.ceil(
++                n_train / int(generator_strategy_config.train_batch_size)
++            )
++            train_epochs = max(1, round(int(target_steps) / steps_per_epoch))
++            strategy.train_epochs = train_epochs
++            print(
++                f"FM-matched step budget: n_train={n_train} "
++                f"steps/epoch={steps_per_epoch} epochs={train_epochs} "
++                f"updates={steps_per_epoch * train_epochs} "
++                f"(target={int(target_steps)})"
++            )
+         strategy.train(experience)
+         print("Training completed")
+ 
+         print("Computing metrics on the whole test set")

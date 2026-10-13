@@ -1,0 +1,56 @@
+[project]
+name = "diffusion-continual-learning"
+version = "0.0.0"
+description = "Vendored Masip et al. Continual Learning of Diffusion Models with Generative Distillation"
+readme = "readme.md"
+requires-python = ">=3.9,<3.11"
+# Lean runtime set for the paper CL scripts. The upstream requirements.txt is a
+# frozen conda dump (mkl-*, brotlipy, etc.) and is not used directly by UV.
+dependencies = [
+    "torch==2.0.1",
+    "torchvision==0.15.2",
+    "torchaudio==2.0.2",
+    "diffusers==0.16.1",
+    "accelerate==0.19.0",
+    "huggingface-hub==0.14.1",
+    "avalanche-lib==0.3.1",
+    "torch-fidelity==0.3.0",
+    "torchmetrics==0.11.4",
+    "einops==0.6.1",
+    "matplotlib==3.7.1",
+    "numpy",
+    "pandas==2.0.1",
+    "Pillow==9.4.0",
+    "PyYAML==6.0",
+    "scikit-learn==1.2.2",
+    "scipy==1.10.1",
+    "tqdm==4.65.0",
+    "wandb==0.15.3",
+    "gdown==4.7.1",
+    "datasets==2.12.0",
+    "pytorchcv==0.0.67",
+    "quadprog==0.1.11",
+    "GPUtil==1.4.0",
+    "munch==3.0.0",
+    "tensorboard==2.13.0",
+]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "utils*", "configs*"]
+
+# Torch 2.0.1 CUDA 11.8 wheels (cluster GPUs). Override with UV_INDEX or
+# --index-url if you need CPU-only: https://download.pytorch.org/whl/cpu
+[[tool.uv.index]]
+name = "pytorch-cu118"
+url = "https://download.pytorch.org/whl/cu118"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu118" }
+torchvision = { index = "pytorch-cu118" }
+torchaudio = { index = "pytorch-cu118" }

@@ -1,0 +1,51 @@
+% Requires \usepackage[table]{xcolor}, \usepackage{booktabs}, and \usepackage{graphicx}.
+\begin{table*}[t]
+\centering
+\definecolor{trajectoryrow}{HTML}{E5EEF3}
+\definecolor{referencerow}{HTML}{F0F0F0}
+\setlength{\tabcolsep}{4.2pt}
+\small
+\caption{\textbf{Continual perturbation-response modeling on Replogle-Nadig.} Final-checkpoint Pearson $\Delta$ and DE Overlap@N after adaptation from three task-0 cell lines to HepG2, reported as fit on the later task, retention on task 0, and heldout on perturbations excluded from training. Means with standard errors over seeds 42, 69, and 1714. Adaptive $\lambda$ is selected on validation strata and equal-task uses $\lambda_k=k/(k+1)$. Gray marks the privileged real-replay reference and blue marks trajectory replay. Higher is better.}
+\label{tab:replogle_cl_full}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lcccccc@{}}
+\toprule
+Method & \multicolumn{3}{c}{Pearson $\Delta$} & \multicolumn{3}{c}{DE Overlap@N} \\
+\cmidrule(lr){2-4}\cmidrule(l){5-7}
+& $\uparrow$ Fit & $\uparrow$ Retention & $\uparrow$ Heldout & $\uparrow$ Fit & $\uparrow$ Retention & $\uparrow$ Heldout \\
+\midrule
+Naive (vf${=}0$, pert${=}0$, ctx${=}0$) & $0.193$ {\scriptsize $(\pm\,0.004)$} & $0.629$ {\scriptsize $(\pm\,0.001)$} & $0.163$ {\scriptsize $(\pm\,0.004)$} & $0.172$ {\scriptsize $(\pm\,0.001)$} & $0.287$ {\scriptsize $(\pm\,0.001)$} & $0.161$ {\scriptsize $(\pm\,0.001)$} \\
+Naive (vf${=}0$, pert${=}1$, ctx${=}1$) & $0.359$ {\scriptsize $(\pm\,0.003)$} & $0.595$ {\scriptsize $(\pm\,0.001)$} & $0.169$ {\scriptsize $(\pm\,0.012)$} & $0.213$ {\scriptsize $(\pm\,0.000)$} & $0.275$ {\scriptsize $(\pm\,0.000)$} & $0.165$ {\scriptsize $(\pm\,0.002)$} \\
+Naive (vf${=}1$, pert${=}0$, ctx${=}0$) & $0.616$ {\scriptsize $(\pm\,0.001)$} & $0.216$ {\scriptsize $(\pm\,0.006)$} & $0.351$ {\scriptsize $(\pm\,0.002)$} & $0.260$ {\scriptsize $(\pm\,0.001)$} & $0.156$ {\scriptsize $(\pm\,0.001)$} & $0.198$ {\scriptsize $(\pm\,0.001)$} \\
+Naive (vf${=}1$, pert${=}0$, ctx${=}1$) & $0.616$ {\scriptsize $(\pm\,0.001)$} & $0.216$ {\scriptsize $(\pm\,0.006)$} & $0.351$ {\scriptsize $(\pm\,0.002)$} & $0.260$ {\scriptsize $(\pm\,0.001)$} & $0.156$ {\scriptsize $(\pm\,0.001)$} & $0.198$ {\scriptsize $(\pm\,0.001)$} \\
+Naive (vf${=}1$, pert${=}1$, ctx${=}0$) & $0.616$ {\scriptsize $(\pm\,0.001)$} & $0.214$ {\scriptsize $(\pm\,0.007)$} & $0.353$ {\scriptsize $(\pm\,0.002)$} & $0.260$ {\scriptsize $(\pm\,0.001)$} & $0.156$ {\scriptsize $(\pm\,0.001)$} & $0.198$ {\scriptsize $(\pm\,0.000)$} \\
+Naive (vf${=}1$, pert${=}1$, ctx${=}1$) & $0.616$ {\scriptsize $(\pm\,0.001)$} & $0.214$ {\scriptsize $(\pm\,0.007)$} & $0.353$ {\scriptsize $(\pm\,0.002)$} & $0.260$ {\scriptsize $(\pm\,0.001)$} & $0.156$ {\scriptsize $(\pm\,0.001)$} & $0.198$ {\scriptsize $(\pm\,0.000)$} \\
+\midrule
+LoRA ($r{=}4$, $\alpha{=}8$) & $0.551$ {\scriptsize $(\pm\,0.000)$} & $0.259$ {\scriptsize $(\pm\,0.005)$} & $0.391$ {\scriptsize $(\pm\,0.004)$} & $0.251$ {\scriptsize $(\pm\,0.000)$} & $0.170$ {\scriptsize $(\pm\,0.002)$} & $0.216$ {\scriptsize $(\pm\,0.000)$} \\
+LoRA ($r{=}8$, $\alpha{=}16$) & $0.585$ {\scriptsize $(\pm\,0.001)$} & $0.260$ {\scriptsize $(\pm\,0.002)$} & $0.386$ {\scriptsize $(\pm\,0.004)$} & $0.258$ {\scriptsize $(\pm\,0.002)$} & $0.169$ {\scriptsize $(\pm\,0.000)$} & $0.214$ {\scriptsize $(\pm\,0.001)$} \\
+LoRA ($r{=}16$, $\alpha{=}32$) & $0.608$ {\scriptsize $(\pm\,0.001)$} & $0.264$ {\scriptsize $(\pm\,0.011)$} & $0.382$ {\scriptsize $(\pm\,0.002)$} & $0.261$ {\scriptsize $(\pm\,0.001)$} & $0.169$ {\scriptsize $(\pm\,0.002)$} & $0.212$ {\scriptsize $(\pm\,0.001)$} \\
+GFT (sigmoid, $vf{=}1$) & $0.616$ {\scriptsize $(\pm\,0.001)$} & $0.226$ {\scriptsize $(\pm\,0.006)$} & $0.361$ {\scriptsize $(\pm\,0.005)$} & $0.259$ {\scriptsize $(\pm\,0.001)$} & $0.157$ {\scriptsize $(\pm\,0.001)$} & $0.202$ {\scriptsize $(\pm\,0.001)$} \\
+GFT (linear, $vf{=}1$) & $0.615$ {\scriptsize $(\pm\,0.001)$} & $0.226$ {\scriptsize $(\pm\,0.006)$} & $0.363$ {\scriptsize $(\pm\,0.005)$} & $0.259$ {\scriptsize $(\pm\,0.000)$} & $0.157$ {\scriptsize $(\pm\,0.001)$} & $0.203$ {\scriptsize $(\pm\,0.001)$} \\
+Two-stage (10\% new ctx $\to$ $vf{=}1$) & $0.618$ {\scriptsize $(\pm\,0.000)$} & $0.227$ {\scriptsize $(\pm\,0.004)$} & $0.361$ {\scriptsize $(\pm\,0.003)$} & $0.257$ {\scriptsize $(\pm\,0.001)$} & $0.159$ {\scriptsize $(\pm\,0.001)$} & $0.201$ {\scriptsize $(\pm\,0.000)$} \\
+Two-stage (50\% new ctx $\to$ $vf{=}1$) & $0.617$ {\scriptsize $(\pm\,0.001)$} & $0.266$ {\scriptsize $(\pm\,0.004)$} & $0.377$ {\scriptsize $(\pm\,0.001)$} & $0.260$ {\scriptsize $(\pm\,0.001)$} & $0.166$ {\scriptsize $(\pm\,0.000)$} & $0.208$ {\scriptsize $(\pm\,0.001)$} \\
+\midrule
+\rowcolor{referencerow} Real replay (adaptive $\lambda$) & $0.610$ {\scriptsize $(\pm\,0.001)$} & $0.632$ {\scriptsize $(\pm\,0.001)$} & $0.406$ {\scriptsize $(\pm\,0.004)$} & $0.260$ {\scriptsize $(\pm\,0.000)$} & $0.288$ {\scriptsize $(\pm\,0.001)$} & $0.218$ {\scriptsize $(\pm\,0.001)$} \\
+\rowcolor{referencerow} Real replay (equal-task $\lambda$) & $0.613$ {\scriptsize $(\pm\,0.001)$} & $0.620$ {\scriptsize $(\pm\,0.001)$} & $0.401$ {\scriptsize $(\pm\,0.001)$} & $0.257$ {\scriptsize $(\pm\,0.001)$} & $0.285$ {\scriptsize $(\pm\,0.002)$} & $0.217$ {\scriptsize $(\pm\,0.001)$} \\
+\midrule
+Generative replay (ODE, adaptive $\lambda$) & $0.611$ {\scriptsize $(\pm\,0.001)$} & $0.594$ {\scriptsize $(\pm\,0.005)$} & $0.403$ {\scriptsize $(\pm\,0.005)$} & $0.257$ {\scriptsize $(\pm\,0.001)$} & $0.276$ {\scriptsize $(\pm\,0.002)$} & $0.217$ {\scriptsize $(\pm\,0.001)$} \\
+Generative replay (ODE, equal-task $\lambda$) & $0.613$ {\scriptsize $(\pm\,0.000)$} & $0.588$ {\scriptsize $(\pm\,0.002)$} & $0.400$ {\scriptsize $(\pm\,0.003)$} & $0.257$ {\scriptsize $(\pm\,0.003)$} & $0.275$ {\scriptsize $(\pm\,0.003)$} & $0.217$ {\scriptsize $(\pm\,0.001)$} \\
+Generative replay (MF-1, adaptive $\lambda$) & $0.611$ {\scriptsize $(\pm\,0.001)$} & $0.580$ {\scriptsize $(\pm\,0.005)$} & $0.403$ {\scriptsize $(\pm\,0.005)$} & $0.257$ {\scriptsize $(\pm\,0.001)$} & $0.280$ {\scriptsize $(\pm\,0.003)$} & $0.217$ {\scriptsize $(\pm\,0.000)$} \\
+Generative replay (MF-1, equal-task $\lambda$) & $0.613$ {\scriptsize $(\pm\,0.000)$} & $0.573$ {\scriptsize $(\pm\,0.002)$} & $0.400$ {\scriptsize $(\pm\,0.002)$} & $0.256$ {\scriptsize $(\pm\,0.002)$} & $0.277$ {\scriptsize $(\pm\,0.002)$} & $0.217$ {\scriptsize $(\pm\,0.000)$} \\
+Generative replay (MF-4, adaptive $\lambda$) & $0.609$ {\scriptsize $(\pm\,0.001)$} & $0.588$ {\scriptsize $(\pm\,0.003)$} & $0.407$ {\scriptsize $(\pm\,0.005)$} & $0.256$ {\scriptsize $(\pm\,0.001)$} & $0.279$ {\scriptsize $(\pm\,0.003)$} & $0.219$ {\scriptsize $(\pm\,0.001)$} \\
+Generative replay (MF-4, equal-task $\lambda$) & $0.613$ {\scriptsize $(\pm\,0.000)$} & $0.581$ {\scriptsize $(\pm\,0.002)$} & $0.400$ {\scriptsize $(\pm\,0.002)$} & $0.256$ {\scriptsize $(\pm\,0.003)$} & $0.278$ {\scriptsize $(\pm\,0.002)$} & $0.218$ {\scriptsize $(\pm\,0.001)$} \\
+\midrule
+\rowcolor{trajectoryrow} Trajectory replay (ODE, adaptive $\lambda$) & $0.612$ {\scriptsize $(\pm\,0.001)$} & $0.619$ {\scriptsize $(\pm\,0.002)$} & $0.399$ {\scriptsize $(\pm\,0.002)$} & $0.256$ {\scriptsize $(\pm\,0.002)$} & $0.285$ {\scriptsize $(\pm\,0.001)$} & $0.217$ {\scriptsize $(\pm\,0.000)$} \\
+\rowcolor{trajectoryrow} Trajectory replay (ODE, equal-task $\lambda$) & $0.610$ {\scriptsize $(\pm\,0.001)$} & $0.606$ {\scriptsize $(\pm\,0.002)$} & $0.398$ {\scriptsize $(\pm\,0.001)$} & $0.257$ {\scriptsize $(\pm\,0.001)$} & $0.282$ {\scriptsize $(\pm\,0.001)$} & $0.217$ {\scriptsize $(\pm\,0.001)$} \\
+\rowcolor{trajectoryrow} Trajectory replay (MF-1, adaptive $\lambda$) & $0.613$ {\scriptsize $(\pm\,0.001)$} & $0.620$ {\scriptsize $(\pm\,0.001)$} & $0.404$ {\scriptsize $(\pm\,0.001)$} & $0.256$ {\scriptsize $(\pm\,0.002)$} & $0.285$ {\scriptsize $(\pm\,0.001)$} & $0.218$ {\scriptsize $(\pm\,0.001)$} \\
+\rowcolor{trajectoryrow} Trajectory replay (MF-1, equal-task $\lambda$) & $0.608$ {\scriptsize $(\pm\,0.002)$} & $0.604$ {\scriptsize $(\pm\,0.001)$} & $0.392$ {\scriptsize $(\pm\,0.002)$} & $0.257$ {\scriptsize $(\pm\,0.001)$} & $0.282$ {\scriptsize $(\pm\,0.001)$} & $0.217$ {\scriptsize $(\pm\,0.001)$} \\
+\rowcolor{trajectoryrow} Trajectory replay (MF-4, adaptive $\lambda$) & $0.613$ {\scriptsize $(\pm\,0.001)$} & $0.620$ {\scriptsize $(\pm\,0.001)$} & $0.404$ {\scriptsize $(\pm\,0.001)$} & $0.256$ {\scriptsize $(\pm\,0.002)$} & $0.285$ {\scriptsize $(\pm\,0.001)$} & $0.218$ {\scriptsize $(\pm\,0.001)$} \\
+\rowcolor{trajectoryrow} Trajectory replay (MF-4, equal-task $\lambda$) & $0.608$ {\scriptsize $(\pm\,0.002)$} & $0.604$ {\scriptsize $(\pm\,0.001)$} & $0.392$ {\scriptsize $(\pm\,0.002)$} & $0.258$ {\scriptsize $(\pm\,0.000)$} & $0.282$ {\scriptsize $(\pm\,0.001)$} & $0.217$ {\scriptsize $(\pm\,0.001)$} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
