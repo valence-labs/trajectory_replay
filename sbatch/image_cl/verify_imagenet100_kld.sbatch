@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=icl-kld-verify
-#SBATCH --partition=def
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --partition=YOUR_GPU_PARTITION
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
 #SBATCH --time=00:30:00
-#SBATCH --gres=gpu:h100:1
+#SBATCH --gres=gpu:1
 #SBATCH --output=sbatch/logs/imagenet100_kld_verify_%j.log
 
 # Verify ResNet50-V2 CMC-100 masked KLD probe on decoded val latents.
@@ -20,12 +20,12 @@ REPO_ROOT="${REPO_ROOT:-${SLURM_SUBMIT_DIR:-$PWD}}"
 cd "${REPO_ROOT}"
 mkdir -p "${REPO_ROOT}/sbatch/logs"
 
-LATENT_DIR="${LATENT_DIR:-${HOME}/sandbox/tx_analysis_data/imagenet100/latents_sdvae_ft_mse_256}"
+LATENT_DIR="${LATENT_DIR:-${REPO_ROOT}/data_dir/imagenet100/latents_sdvae_ft_mse_256}"
 VAE_ID="${VAE_ID:-stabilityai/sd-vae-ft-mse}"
 N="${N:-256}"
 BATCH_SIZE="${BATCH_SIZE:-32}"
 
-export HF_HOME="${HF_HOME:-${HOME}/sandbox/tx_analysis_data/hf_home}"
+export HF_HOME="${HF_HOME:-${REPO_ROOT}/data_dir/hf_home}"
 export HUGGINGFACE_HUB_CACHE="${HUGGINGFACE_HUB_CACHE:-${HF_HOME}/hub}"
 mkdir -p "${HF_HOME}" "${HUGGINGFACE_HUB_CACHE}"
 

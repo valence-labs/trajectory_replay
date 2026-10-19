@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=tx-pbmc-pca100-ref
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
-#SBATCH --partition=cpu
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
+#SBATCH --partition=YOUR_CPU_PARTITION
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=256G

@@ -5,7 +5,7 @@
 #   class-cond + CFG 1.5, UNet large, lr=1e-4, grad clip=1.0,
 #   ~100k Adam steps/task (EPOCHS=667 @ batch 256), n_experiences=3 (34/33/33),
 #   Euler step 0.02 (~50 NFEs), cumulative fixed-step schedule,
-#   FID test=10000, per-class FID off, QOS=hooke-predict
+#   FID test=10000, per-class FID off, QOS=YOUR_QOS
 #
 # Run names match CIFAR/FMNIST style (recipe knobs are defaults, not suffixes):
 #   naive_s42, cumulative_s42, generative_g3_s42, ...
@@ -70,7 +70,7 @@ export SEEDS="${SEEDS:-42 69 1714}"
 export REPLAY_BACKENDS="${REPLAY_BACKENDS:-ode}"
 export LAMBDA_MODE="${LAMBDA_MODE:-grid}"
 export LAMBDA_GRID="${LAMBDA_GRID:-0.25 0.5 0.75}"
-export QOS="${QOS:-hooke-predict}"
+export QOS="${QOS:-YOUR_QOS}"
 # Empty by default (naive/cumulative). Set RUN_SUFFIX=g3 for λ-grid gene/traj.
 export RUN_SUFFIX="${RUN_SUFFIX:-}"
 

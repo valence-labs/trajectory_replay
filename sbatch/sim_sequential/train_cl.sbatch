@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --job-name=simseq-cl
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=32G
 #SBATCH --time=48:00:00
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 #SBATCH --output=sbatch/logs/sim_sequential_%j.log
 

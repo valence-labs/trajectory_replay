@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=tx-l1-validate
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=128G
 #SBATCH --time=01:00:00
 #SBATCH --output=sbatch/logs/tx_l1_validate_%j.log
-#SBATCH --partition=cpu
+#SBATCH --partition=YOUR_CPU_PARTITION
 
 set -euo pipefail
 REPO_ROOT="${REPO_ROOT:-${SLURM_SUBMIT_DIR:-$PWD}}"

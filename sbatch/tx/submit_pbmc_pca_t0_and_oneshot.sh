@@ -21,7 +21,7 @@ for DIM in 50 100 256 512; do
     EMB="${PCA_ROOT}/pca${DIM}_embedding.npy"
   fi
   RUN="oneshot_pca${DIM}_task0_pbmc_h1024_d4_st100000_s42"
-  JOB=$(sbatch --parsable --dependency="afterok:${FIT}" --qos=hooke-predict --mem=256G \
+  JOB=$(sbatch --parsable --dependency="afterok:${FIT}" --qos=YOUR_QOS --mem=256G \
     --export=ALL,DATASET=pbmc,SEED=42,TARGET_STEPS=100000,HIDDEN_DIM=1024,DEPTH=4,SKIP_CELLEVAL=1,PCA_DECODER=inverse,PRED_CONTROL=decoded,H5AD_PATH="${H5AD}",PCA_BASIS="${BASIS}",PCA_EMBEDDING="${EMB}",PCA_DIM=0,RUN_NAME="${RUN}" \
     sbatch/tx/train_pca_oneshot_hepg2.sbatch)
   echo "pca_dim=${DIM} oneshot job=${JOB} afterok:${FIT} run=${RUN}"

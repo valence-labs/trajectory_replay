@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=simmix-pretrain
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=32G
 #SBATCH --time=04:00:00
 #SBATCH --output=sbatch/logs/sim_mixture_pretrain_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 
 # Unconditional MoG pretrain on task 0 (dim=2 by default).

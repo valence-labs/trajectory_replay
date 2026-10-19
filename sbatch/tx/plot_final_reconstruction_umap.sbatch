@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=tx-final-recon-umap
-#SBATCH --qos=normal
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=128G
 #SBATCH --time=2:00:00
 #SBATCH --output=sbatch/logs/tx_final_recon_umap_%j.log
-#SBATCH --partition=cpu
+#SBATCH --partition=YOUR_CPU_PARTITION
 
 # Protocol-matched observed vs frozen-affine reconstruction UMAPs:
 # Replogle PCA-50 and PBMC PCA-100.

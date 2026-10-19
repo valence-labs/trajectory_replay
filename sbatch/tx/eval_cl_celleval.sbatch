@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=tx-cl-ce
-#SBATCH --qos=normal
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=512G
 #SBATCH --time=24:00:00
 #SBATCH --output=sbatch/logs/tx_cl_celleval_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 
 set -euo pipefail

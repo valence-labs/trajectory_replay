@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=dl-scimilarity
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
 #SBATCH --time=12:00:00
 #SBATCH --output=sbatch/logs/dl_scimilarity_%j.log
-#SBATCH --partition=cpu
+#SBATCH --partition=YOUR_CPU_PARTITION
 
 # Fetch the SCimilarity encoder from Zenodo record 10685499.
 #

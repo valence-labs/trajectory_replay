@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=tx-std-dec-recon
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=256G
 #SBATCH --time=06:00:00
 #SBATCH --output=sbatch/logs/tx_std_dec_recon_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 
 # Raw vs whitened latent decoder reconstruction (no CFM).

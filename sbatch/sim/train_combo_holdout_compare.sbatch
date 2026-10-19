@@ -1,14 +1,14 @@
 #!/bin/bash
 #SBATCH --job-name=flow-holdout-cmp
-#SBATCH --partition=cpu
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --partition=YOUR_CPU_PARTITION
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=32G
 #SBATCH --time=12:00:00
 #SBATCH --output=sbatch/logs/%j.log
-# #SBATCH --partition=def
+# #SBATCH --partition=YOUR_GPU_PARTITION
 # #SBATCH --gres=gpu:1
 
 # Held-out (c,p) combo: train noise-to-data + data-to-data (combo excluded), compare on held-out.

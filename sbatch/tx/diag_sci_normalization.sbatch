@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=sci-norm-diag
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=128G
 #SBATCH --time=2:00:00
 #SBATCH --output=sbatch/logs/sci_norm_diag_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 
 # align-only vs align+tp10k SCimilarity encoding, on a subsample.

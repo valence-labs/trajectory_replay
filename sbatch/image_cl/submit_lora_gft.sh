@@ -26,9 +26,9 @@ GFT_SCHEDULES=(${GFT_SCHEDULES-sigmoid linear})
 # Reuse task 0 from this run stem unless REUSE_TASK0=0.
 REUSE_TASK0="${REUSE_TASK0:-1}"
 TASK0_STEM="${TASK0_STEM:-naive}"
-# train_cl.sbatch hardcodes --qos=normal, where long ImageNet runs get evicted
-# when a node drains. Override unless the caller asks for something else.
-QOS="${QOS:-hooke-predict}"
+# train_cl.sbatch uses --qos=YOUR_QOS. Set QOS to a queue that will not
+# preempt a long ImageNet run.
+QOS="${QOS:-YOUR_QOS}"
 TIME="${TIME:-}"
 DRY_RUN="${DRY_RUN:-0}"
 # Skip runs that already finished or are already queued, so a partial campaign

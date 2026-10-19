@@ -27,7 +27,7 @@ LAMBDA_GRID="${LAMBDA_GRID:-0.1 0.25 0.5 0.75 0.9}"
 RUN_SUFFIX="${RUN_SUFFIX:-}"
 # Optional walltime override for sbatch, e.g. TIME=30:00:00
 TIME="${TIME:-}"
-QOS="${QOS:-}"  # optional override, e.g. QOS=hooke-predict
+QOS="${QOS:-}"  # optional override, e.g. QOS=YOUR_QOS
 DRY_RUN="${DRY_RUN:-0}"
 DISABLE_FUSED_SDPA="${DISABLE_FUSED_SDPA:-1}"
 TRAJ_KAPPA="${TRAJ_KAPPA:-none}"

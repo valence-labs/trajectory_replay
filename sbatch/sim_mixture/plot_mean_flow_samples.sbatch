@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=simmix-mfplot
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
 #SBATCH --time=00:30:00
 #SBATCH --output=sbatch/logs/sim_mixture_mfplot_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 
 # Render MeanFlow sample scatters at one or more N (sampling budgets).

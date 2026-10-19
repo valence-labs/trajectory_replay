@@ -20,8 +20,8 @@ def main() -> None:
     p.add_argument(
         "--latent-dir",
         type=Path,
-        default=Path.home()
-        / "sandbox/tx_analysis_data/imagenet100/latents_sdvae_ft_mse_256",
+        default=Path(__file__).resolve().parents[1]
+        / "data_dir/imagenet100/latents_sdvae_ft_mse_256",
     )
     p.add_argument("--vae-id", type=str, default="stabilityai/sd-vae-ft-mse")
     p.add_argument("--n", type=int, default=256)

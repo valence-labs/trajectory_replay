@@ -38,7 +38,8 @@ import torch
 
 from trajectory_replay.data.split_fmnist import TaskSplit
 
-DEFAULT_LATENT_DIR = Path.home() / "sandbox/tx_analysis_data/imagenet100/latents_sdvae_ft_mse_256"
+_REPO_ROOT = Path(__file__).resolve().parents[3]
+DEFAULT_LATENT_DIR = _REPO_ROOT / "data_dir" / "imagenet100" / "latents_sdvae_ft_mse_256"
 
 # Recorded Avalanche-compatible orders for Masip seeds (5 × 20 on 100 classes).
 # Within-task lists are sorted; regenerated via ``_avalanche_nc_class_tasks``.

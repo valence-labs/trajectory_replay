@@ -1,14 +1,14 @@
 #!/bin/bash
 #SBATCH --job-name=icl-reeval-ode
-#SBATCH --qos=normal
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=48G
 #SBATCH --time=12:00:00
 #SBATCH --output=sbatch/logs/image_cl_reeval_%j.log
-#SBATCH --partition=def
-#SBATCH --gres=gpu:h100:1
+#SBATCH --partition=YOUR_GPU_PARTITION
+#SBATCH --gres=gpu:1
 
 # Re-evaluate finished image_cl checkpoints under alternate ODE settings (no retraining).
 #
@@ -62,7 +62,7 @@ extra+=(--out-name "${OUT_NAME}")
 unset UV_CACHE_DIR UV_TOOL_DIR UV_PYTHON_INSTALL_DIR || true
 export UV_CACHE_DIR="${TMPDIR:-/tmp}/uv-cache-${USER}-${SLURM_JOB_ID:-local}"
 mkdir -p "${UV_CACHE_DIR}"
-export HF_HOME="${HF_HOME:-${HOME}/sandbox/tx_analysis_data/hf_home}"
+export HF_HOME="${HF_HOME:-${REPO_ROOT}/data_dir/hf_home}"
 export HUGGINGFACE_HUB_CACHE="${HUGGINGFACE_HUB_CACHE:-${HF_HOME}/hub}"
 mkdir -p "${HF_HOME}" "${HUGGINGFACE_HUB_CACHE}"
 

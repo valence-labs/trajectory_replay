@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Final Replogle PCA-50 replay matrix: 14 methods x 3 seeds.
-# Training and dependent CellEval jobs run on hooke-predict.
+# Training and dependent CellEval jobs use YOUR_QOS from the sbatch headers.
 #
 # DRY_RUN=1 ./sbatch/tx/submit_final_replogle_replay.sh
 
@@ -41,7 +41,7 @@ export PREPARE_ENV="${PREPARE_ENV:-1}"
 export SUBMIT_CELLEVAL=1
 export CELLEVAL_HELDOUT_CURVE=0
 export NO_RESUME=1
-export SBATCH_OPTS="--qos=hooke-predict --exclude=hop63"
-export ENV_SBATCH_OPTS="--qos=normal"
+export SBATCH_OPTS="--qos=YOUR_QOS"
+export ENV_SBATCH_OPTS="--qos=YOUR_QOS"
 
 exec "${REPO_ROOT}/sbatch/tx/submit_cl_pca50.sh" "$@"

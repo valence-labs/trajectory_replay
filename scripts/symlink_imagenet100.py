@@ -24,12 +24,12 @@ def main() -> int:
     p.add_argument(
         "--imagenet-root",
         type=Path,
-        default=Path.home() / "sandbox/tx_analysis_data/imagenet",
+        default=Path(__file__).resolve().parents[1] / "data_dir" / "imagenet",
     )
     p.add_argument(
         "--out-root",
         type=Path,
-        default=Path.home() / "sandbox/tx_analysis_data/imagenet100",
+        default=Path(__file__).resolve().parents[1] / "data_dir" / "imagenet100",
     )
     p.add_argument(
         "--synsets-file",

@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=mnist-eval
-#SBATCH --partition=def
-#SBATCH --qos=normal
-#SBATCH --wckey=hooke-predict
+#SBATCH --partition=YOUR_GPU_PARTITION
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G

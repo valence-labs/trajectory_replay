@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=masip-in100-e2e
-#SBATCH --partition=def
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --partition=YOUR_GPU_PARTITION
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --time=02:00:00
-#SBATCH --gres=gpu:h100:1
+#SBATCH --gres=gpu:1
 #SBATCH --output=sbatch/logs/masip_in100_e2e_%j.log
 
 # End-to-end integration check of the latent Masip ImageNet-100 baseline:
@@ -26,15 +26,14 @@ mkdir -p "${REPO_ROOT}/sbatch/logs"
 
 MASIP_ROOT="${MASIP_ROOT:-${REPO_ROOT}/baselines/diffusion_continual_learning}"
 STRATEGY="${STRATEGY:-full_generation_distillation}"
-LATENT_DIR="${LATENT_DIR:-${HOME}/sandbox/tx_analysis_data/imagenet100/latents_sdvae_ft_mse_256}"
+LATENT_DIR="${LATENT_DIR:-${REPO_ROOT}/data_dir/imagenet100/latents_sdvae_ft_mse_256}"
 VAE_ID="${VAE_ID:-stabilityai/sd-vae-ft-mse}"
-OUTPUT_DIR="${OUTPUT_DIR:-${HOME}/sandbox/trajectory_replay/baselines/masip_smoke}"
+OUTPUT_DIR="${OUTPUT_DIR:-${REPO_ROOT}/results_dir/baselines/masip_smoke}"
 
-SANDBOX_ROOT="${SANDBOX_ROOT:-${HOME}/sandbox}"
-DATA_CACHE="${DATA_CACHE:-${SANDBOX_ROOT}/trajectory_replay/data_cache}"
+DATA_CACHE="${DATA_CACHE:-${REPO_ROOT}/data_dir/cache}"
 export AVALANCHE_HOME="${AVALANCHE_HOME:-${DATA_CACHE}/avalanche}"
 export TORCH_HOME="${TORCH_HOME:-${DATA_CACHE}/torch}"
-export HF_HOME="${HF_HOME:-${HOME}/sandbox/tx_analysis_data/hf_home}"
+export HF_HOME="${HF_HOME:-${REPO_ROOT}/data_dir/hf_home}"
 export HUGGINGFACE_HUB_CACHE="${HUGGINGFACE_HUB_CACHE:-${HF_HOME}/hub}"
 mkdir -p "${AVALANCHE_HOME}" "${TORCH_HOME}" "${HF_HOME}" "${HUGGINGFACE_HUB_CACHE}"
 

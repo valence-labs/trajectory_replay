@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=simmix-ft
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=32G
 #SBATCH --time=16:00:00
 #SBATCH --output=sbatch/logs/sim_mixture_finetune_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 
 # Unconditional MoG finetune on task 1.

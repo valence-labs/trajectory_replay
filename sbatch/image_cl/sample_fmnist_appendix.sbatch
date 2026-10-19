@@ -1,14 +1,14 @@
 #!/bin/bash
 #SBATCH --job-name=fmnist-samples
-#SBATCH --qos=normal
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=32G
 #SBATCH --time=01:00:00
 #SBATCH --output=sbatch/logs/fmnist_samples_%j.log
-#SBATCH --partition=def
-#SBATCH --gres=gpu:h100:1
+#SBATCH --partition=YOUR_GPU_PARTITION
+#SBATCH --gres=gpu:1
 
 set -euo pipefail
 

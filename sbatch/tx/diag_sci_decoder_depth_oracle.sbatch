@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=tx-sci-dec-depth
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=256G
 #SBATCH --time=12:00:00
 #SBATCH --output=sbatch/logs/tx_sci_dec_depth_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 
 # Oracle Pearson-Δ vs SCimilarity decoder depth (no CFM).

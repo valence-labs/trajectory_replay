@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=masip-cl
-#SBATCH --qos=normal
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=32G
 #SBATCH --time=24:00:00
 #SBATCH --output=sbatch/logs/masip_cl_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 
 # Masip et al. continual diffusion baseline (one seed per job).
@@ -59,9 +59,8 @@ fi
 # torch 2.0.1 fused attention kernels are broken on H100 (sm_90); see train_cl.py.
 : "${DISABLE_FUSED_SDPA:=1}"
 
-SANDBOX_ROOT="${SANDBOX_ROOT:-${HOME}/sandbox}"
-DATA_CACHE="${DATA_CACHE:-${SANDBOX_ROOT}/trajectory_replay/data_cache}"
-OUTPUT_DIR="${OUTPUT_DIR:-${SANDBOX_ROOT}/trajectory_replay/baselines/masip}"
+DATA_CACHE="${DATA_CACHE:-${REPO_ROOT}/data_dir/cache}"
+OUTPUT_DIR="${OUTPUT_DIR:-${REPO_ROOT}/results_dir/baselines/masip}"
 
 # Dataset routing first: the generator strategy configs are dataset-specific
 # (CIFAR uses 200 epochs / batch 64 under configs/strategy/cifar/).
@@ -98,7 +97,7 @@ case "${DATASET}" in
     : "${KLD_CLF_PATH:=torchvision:resnet50}"
     : "${GENERATION_STEPS:=20}"
     : "${IMAGE_SIZE:=32}"
-    : "${LATENT_DIR:=${HOME}/sandbox/tx_analysis_data/imagenet100/latents_sdvae_ft_mse_256}"
+    : "${LATENT_DIR:=${REPO_ROOT}/data_dir/imagenet100/latents_sdvae_ft_mse_256}"
     : "${VAE_ID:=stabilityai/sd-vae-ft-mse}"
     STRATEGY_CONFIG_DIR="configs/strategy/imagenet100"
     NO_DISTILL_CONFIG="diffusion_no_distill.json"
@@ -171,7 +170,7 @@ mkdir -p "${OUTPUT_DIR}" "${DATA_CACHE}"
 export AVALANCHE_HOME="${AVALANCHE_HOME:-${DATA_CACHE}/avalanche}"
 export TORCH_HOME="${TORCH_HOME:-${DATA_CACHE}/torch}"
 # HuggingFace cache for the frozen SD-VAE used to decode ImageNet-100 latents.
-export HF_HOME="${HF_HOME:-${HOME}/sandbox/tx_analysis_data/hf_home}"
+export HF_HOME="${HF_HOME:-${REPO_ROOT}/data_dir/hf_home}"
 export HUGGINGFACE_HUB_CACHE="${HUGGINGFACE_HUB_CACHE:-${HF_HOME}/hub}"
 mkdir -p "${AVALANCHE_HOME}" "${TORCH_HOME}" "${HF_HOME}" "${HUGGINGFACE_HUB_CACHE}"
 

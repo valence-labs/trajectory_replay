@@ -95,13 +95,13 @@ def main() -> int:
     p.add_argument(
         "--hf-raw",
         type=Path,
-        default=Path.home() / "sandbox/tx_analysis_data/imagenet/hf_raw",
+        default=Path(__file__).resolve().parents[1] / "data_dir" / "imagenet" / "hf_raw",
         help="Directory containing classes.py and data/*.parquet",
     )
     p.add_argument(
         "--out-root",
         type=Path,
-        default=Path.home() / "sandbox/tx_analysis_data/imagenet",
+        default=Path(__file__).resolve().parents[1] / "data_dir" / "imagenet",
         help="Output root that will contain train/ and val/",
     )
     p.add_argument(

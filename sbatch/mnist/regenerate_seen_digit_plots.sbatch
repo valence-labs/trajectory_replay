@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=mnist-seen-plots
-#SBATCH --qos=normal
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G
 #SBATCH --time=00:30:00
 #SBATCH --output=sbatch/logs/mnist_seen_plots_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 
 # Regenerate real_p*/gen_p* grids for MNIST finetune checkpoints (GPU only).

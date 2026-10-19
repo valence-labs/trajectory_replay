@@ -1,19 +1,19 @@
 #!/bin/bash
 #SBATCH --job-name=build-replogle
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=256G
 #SBATCH --time=24:00:00
 #SBATCH --output=sbatch/logs/build_replogle_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 
 # Build every Replogle CL input from data_dir/replogle/replogle.h5ad.
 #
 #   sbatch sbatch/tx/build_replogle.sbatch                       # all stages
-#   STAGES=adata,pca sbatch --partition=cpu --gres=NONE \
+#   STAGES=adata,pca sbatch --partition=YOUR_CPU_PARTITION --gres=NONE \
 #     sbatch/tx/build_replogle.sbatch                            # CPU-only stages
 #
 # Stages are idempotent: existing outputs are skipped unless FORCE=1. The GPU is

@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=tx-pca-widths
-#SBATCH --qos=normal
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=256G
 #SBATCH --time=08:00:00
 #SBATCH --output=sbatch/logs/tx_pca_widths_%j.log
-#SBATCH --partition=cpu
+#SBATCH --partition=YOUR_CPU_PARTITION
 #SBATCH --gres=NONE
 
 # Fit task-0 PCA widths. Nested = one SVD at max(WIDTHS), then slice.

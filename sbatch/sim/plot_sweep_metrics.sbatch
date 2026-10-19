@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=plot-sweep
-#SBATCH --partition=cpu
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --partition=YOUR_CPU_PARTITION
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=8G

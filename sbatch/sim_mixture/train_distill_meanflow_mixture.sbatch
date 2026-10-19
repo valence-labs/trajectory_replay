@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=simmix-distill-mix
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=32G
 #SBATCH --time=02:00:00
 #SBATCH --output=sbatch/logs/sim_mixture_distill_mix_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 
 # Distill MeanFlow directly on the mixture data from a frozen oracle CFM

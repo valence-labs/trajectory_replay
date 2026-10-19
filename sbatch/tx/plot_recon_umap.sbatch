@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=sci-recon-umap
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=128G
 #SBATCH --time=2:00:00
 #SBATCH --output=sbatch/logs/sci_recon_umap_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 
 # True vs reconstructed HVG UMAPs for ridge / PCA / STATE / SCimilarity MLPs.

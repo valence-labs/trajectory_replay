@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=encode-se
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=128G
 #SBATCH --time=24:00:00
 #SBATCH --output=sbatch/logs/encode_se_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 
 # Encode h5ad(s) with Arc SE-600M via third_party/arc-state (isolated UV env).
@@ -15,7 +15,7 @@
 # From repo root:
 #   sbatch sbatch/third_party/encode_se.sbatch
 #
-# Defaults use the repo's data_dir symlink → ~/sandbox/tx_analysis_data/replogle.h5ad
+# Default input is data_dir/replogle.h5ad inside this repository.
 # (same Arc Replogle-Nadig-Preprint file; no HF data re-download).
 #
 # Env overrides:
@@ -109,7 +109,7 @@ fi
 
 if [[ ! -f "${INPUT_H5AD}" ]]; then
   echo "ERROR: INPUT_H5AD not found: ${INPUT_H5AD}" >&2
-  echo "Expected data_dir symlink -> sandbox/tx_analysis_data (see README)." >&2
+  echo "Place the AnnData file at data_dir/replogle.h5ad or set INPUT_H5AD." >&2
   exit 1
 fi
 

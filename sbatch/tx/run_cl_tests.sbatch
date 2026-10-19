@@ -6,14 +6,14 @@
 #   sbatch sbatch/tx/run_cl_tests.sbatch
 #   TESTS="tests/test_tx_cl_stage_c.py" sbatch sbatch/tx/run_cl_tests.sbatch
 #SBATCH --job-name=tx-cl-tests
-#SBATCH --qos=normal
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --time=01:00:00
 #SBATCH --output=sbatch/logs/tx_cl_tests_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_CPU_PARTITION
 
 set -euo pipefail
 REPO_ROOT="${REPO_ROOT:-${SLURM_SUBMIT_DIR:-$PWD}}"

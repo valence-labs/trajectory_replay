@@ -30,7 +30,7 @@ Pixels are resized/center-cropped to ``--image-size`` and normalized to ``[-1, 1
 Optional ``--save-decode-samples N`` writes a small orig|recon PNG grid per split
 for visual QA (top row = input crop, bottom row = VAE decode of cached latents).
 
-Default target is CMC ImageNet-100 under ``~/sandbox/tx_analysis_data/imagenet100``.
+Default target is ``data_dir/imagenet100`` in this repository.
 """
 
 from __future__ import annotations
@@ -158,7 +158,7 @@ def main() -> int:
     p.add_argument(
         "--image-root",
         type=Path,
-        default=Path.home() / "sandbox/tx_analysis_data/imagenet100",
+        default=Path(__file__).resolve().parents[1] / "data_dir" / "imagenet100",
         help="Torchvision ImageNet root with train/ and val/",
     )
     p.add_argument(

@@ -1,14 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=tx-cell-eval
-#SBATCH --partition=cpu
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=256G
 #SBATCH --time=6:00:00
 #SBATCH --output=sbatch/logs/tx_cell_eval_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 
 # Post-hoc Cell-Eval on one tx run (val/test by default from metrics.json).

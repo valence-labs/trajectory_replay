@@ -27,7 +27,7 @@ git fetch --tags origin
 git checkout "${PIN}"
 echo "Checked out $(git rev-parse HEAD) (want ${PIN})"
 
-# Prefer a project-local UV cache if the sandbox/default cache is unwritable.
+# Prefer a project-local UV cache if the default cache is unwritable.
 if [[ -z "${UV_CACHE_DIR:-}" ]] || [[ ! -w "${UV_CACHE_DIR}" ]]; then
   export UV_CACHE_DIR="${REPO_ROOT}/.uv-cache"
   mkdir -p "${UV_CACHE_DIR}"

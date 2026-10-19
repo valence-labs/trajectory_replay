@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=sci-recon-bench
-#SBATCH --qos=normal
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=128G
 #SBATCH --time=4:00:00
 #SBATCH --output=sbatch/logs/sci_recon_bench_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 
 # Linear vs MLP reconstruction of 2000 HVGs from SCimilarity (no CFM).

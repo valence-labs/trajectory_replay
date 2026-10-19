@@ -39,19 +39,19 @@ def launch(
         "--launcher.partition",
         dest="partition",
         type=str,
-        default=os.environ.get("TR_SLURM_PARTITION", "hopper"),
+        default=os.environ.get("TR_SLURM_PARTITION", "YOUR_GPU_PARTITION"),
     )
     group.add_argument(
         "--launcher.qos",
         dest="qos",
         type=str,
-        default=os.environ.get("TR_SLURM_QOS", "hooke-predict"),
+        default=os.environ.get("TR_SLURM_QOS", "YOUR_QOS"),
     )
     group.add_argument(
         "--launcher.wckey",
         dest="wckey",
         type=str,
-        default=os.environ.get("TR_SLURM_WCKEY", "hooke-predict"),
+        default=os.environ.get("TR_SLURM_WCKEY", "YOUR_WCKEY"),
     )
     group.add_argument(
         "--launcher.output_dir", dest="output_dir", type=str, default="./outputs/"

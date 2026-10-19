@@ -40,11 +40,10 @@ STRATEGIES=(${STRATEGIES:-naive cumulative no_distillation full_generation_disti
 CONFIG_DIR="${CONFIG_DIR:-${REPO_ROOT}/baselines/configs/imagenet100_fm_budget}"
 GENERATOR_CONFIG="${GENERATOR_CONFIG:-${CONFIG_DIR}/ddim_large_4ch_latent.json}"
 
-SANDBOX_ROOT="${SANDBOX_ROOT:-${HOME}/sandbox}"
-DATA_CACHE="${DATA_CACHE:-${SANDBOX_ROOT}/trajectory_replay/data_cache}"
+DATA_CACHE="${DATA_CACHE:-${REPO_ROOT}/data_dir/cache}"
 # Separate root: run dir names are identical to the medium-budget grid.
-OUTPUT_DIR="${OUTPUT_DIR:-${SANDBOX_ROOT}/trajectory_replay/baselines/masip_fm_budget}"
-LATENT_DIR="${LATENT_DIR:-${HOME}/sandbox/tx_analysis_data/imagenet100/latents_sdvae_ft_mse_256}"
+OUTPUT_DIR="${OUTPUT_DIR:-${REPO_ROOT}/results_dir/baselines/masip_fm_budget}"
+LATENT_DIR="${LATENT_DIR:-${REPO_ROOT}/data_dir/imagenet100/latents_sdvae_ft_mse_256}"
 VAE_ID="${VAE_ID:-stabilityai/sd-vae-ft-mse}"
 
 # FM-matched protocol knobs (unchanged from the medium-budget grid).
@@ -59,7 +58,7 @@ DISABLE_FUSED_SDPA="${DISABLE_FUSED_SDPA:-1}"
 # Per-experience Avalanche checkpoints: lets a walltime kill resume at the next task.
 KEEP_CHECKPOINTS="${KEEP_CHECKPOINTS:-1}"
 
-QOS="${QOS:-hooke-predict}"
+QOS="${QOS:-YOUR_QOS}"
 TIME="${TIME:-96:00:00}"
 MEM="${MEM:-64G}"
 GRES="${GRES:-gpu:1}"
@@ -97,7 +96,7 @@ for strategy in "${STRATEGIES[@]}"; do
     export_vars+=",GENERATOR_CONFIG=${GENERATOR_CONFIG},LAMBD=${LAMBD}"
     export_vars+=",GENERATION_STEPS=${GENERATION_STEPS},SOLVER_TYPE=${SOLVER_TYPE}"
     export_vars+=",KEEP_CHECKPOINTS=${KEEP_CHECKPOINTS},DISABLE_FUSED_SDPA=${DISABLE_FUSED_SDPA}"
-    export_vars+=",OUTPUT_DIR=${OUTPUT_DIR},DATA_CACHE=${DATA_CACHE},SANDBOX_ROOT=${SANDBOX_ROOT}"
+    export_vars+=",OUTPUT_DIR=${OUTPUT_DIR},DATA_CACHE=${DATA_CACHE}"
     export_vars+=",REPO_ROOT=${REPO_ROOT}"
     export_vars+=",LATENT_DIR=${LATENT_DIR},VAE_ID=${VAE_ID}"
     export_vars+=",CLASS_CONDITIONAL=${CLASS_CONDITIONAL},N_EXPERIENCES=${N_EXPERIENCES}"

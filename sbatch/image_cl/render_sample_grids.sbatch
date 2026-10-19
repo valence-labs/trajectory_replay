@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=icl-render-grids
-#SBATCH --partition=cpu
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --partition=YOUR_CPU_PARTITION
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
@@ -26,7 +26,7 @@ mkdir -p "${REPO_ROOT}/sbatch/logs"
 : "${ROOT:=results_dir/image_cl/imagenet100}"
 : "${NROW:=8}"
 : "${OVERWRITE:=0}"
-export ROOT NROW OVERWRITE
+export REPO_ROOT ROOT NROW OVERWRITE
 
 unset UV_CACHE_DIR UV_TOOL_DIR UV_PYTHON_INSTALL_DIR || true
 export UV_CACHE_DIR="${TMPDIR:-/tmp}/uv-cache-${USER}-${SLURM_JOB_ID:-local}"
@@ -71,7 +71,7 @@ for run in ("naive_s42", "cumulative_s42"):
         shutil.copy2(src, dest)
         print(f"staged {dest}")
 
-masip = Path.home() / "sandbox/trajectory_replay/baselines/masip/split_imagenet100"
+masip = Path(os.environ["REPO_ROOT"]) / "results_dir/baselines/masip/split_imagenet100"
 for strat, tag in (
     ("gr_diffusion_naive_steps_20_lambd_0.75", "diff_naive"),
     ("gr_diffusion_cumulative_steps_20_lambd_0.75", "diff_cumulative"),

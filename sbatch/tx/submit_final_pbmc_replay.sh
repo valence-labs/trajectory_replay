@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Final PBMC PCA-100 replay matrix: 14 methods x 3 seeds.
-# Training and dependent CellEval jobs run on hooke-predict.
+# Training and dependent CellEval jobs use YOUR_QOS from the sbatch headers.
 #
 # DRY_RUN=1 ./sbatch/tx/submit_final_pbmc_replay.sh
 
@@ -38,7 +38,7 @@ export REQUIRE_EXISTING_DECODERS=1
 export PREPARE_ENV="${PREPARE_ENV:-1}"
 export SUBMIT_CELLEVAL=1
 export NO_RESUME=1
-export SBATCH_OPTS="--qos=hooke-predict"
-export ENV_SBATCH_OPTS="--qos=normal"
+export SBATCH_OPTS="--qos=YOUR_QOS"
+export ENV_SBATCH_OPTS="--qos=YOUR_QOS"
 
 exec "${REPO_ROOT}/sbatch/tx/submit_cl_pca100_pbmc.sh" "$@"

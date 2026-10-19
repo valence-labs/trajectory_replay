@@ -150,9 +150,8 @@ def plot_seed(seed: int, *, output_dir: Path, data_root: Path) -> Path:
             / "task04_gen.pt"
         ),
         "masip": (
-            Path.home()
-            / "sandbox"
-            / "trajectory_replay"
+            REPO_ROOT
+            / "results_dir"
             / "baselines"
             / "masip"
             / "split_fmnist"

@@ -117,8 +117,8 @@ Defaults (overridable via env):
 
 | Env | Default |
 |-----|---------|
-| `OUTPUT_DIR` | `$HOME/sandbox/trajectory_replay/baselines/masip` |
-| `DATA_CACHE` | `$HOME/sandbox/trajectory_replay/data_cache` (`AVALANCHE_HOME` / `TORCH_HOME`) |
+| `OUTPUT_DIR` | `$REPO_ROOT/results_dir/baselines/masip` |
+| `DATA_CACHE` | `$REPO_ROOT/data_dir/cache` (`AVALANCHE_HOME` / `TORCH_HOME`) |
 | `KEEP_CHECKPOINTS` | `0` (set `1` to skip upstream checkpoint cleanup) |
 | `SOLVER_TYPE` | `cnn` (set `None` for FID/KLD-only, cheaper) |
 
@@ -152,5 +152,5 @@ To pin A100s instead: `sbatch --gres=gpu:a100:1 …`.
 
 ### Outputs
 
-Sandbox by default (see table above). You can also point `OUTPUT_DIR` at
-`results_dir/baselines/masip/`.
+Defaults are in the table above. Point `OUTPUT_DIR` at
+`results_dir/baselines/masip/` when you want the runs next to the other results.

@@ -1,20 +1,20 @@
 #!/bin/bash
 #SBATCH --job-name=imagenet-vae-encode
-#SBATCH --partition=def
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --partition=YOUR_GPU_PARTITION
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --time=04:00:00
-#SBATCH --gres=gpu:h100:1
+#SBATCH --gres=gpu:1
 #SBATCH --output=sbatch/logs/imagenet_vae_encode_%j.log
 
 # Encode ImageNet-100 (torchvision layout) → frozen SD-VAE latents.
 #
 #   sbatch sbatch/image_cl/encode_imagenet_latents.sbatch
 #   # Full ImageNet-1k:
-#   sbatch --export=ALL,IMAGE_ROOT=$HOME/sandbox/tx_analysis_data/imagenet \
+#   sbatch --export=ALL,IMAGE_ROOT=data_dir/imagenet \
 #     sbatch/image_cl/encode_imagenet_latents.sbatch
 #   # Force re-encode:
 #   sbatch --export=ALL,OVERWRITE=1 sbatch/image_cl/encode_imagenet_latents.sbatch
@@ -31,7 +31,7 @@ REPO_ROOT="${REPO_ROOT:-${SLURM_SUBMIT_DIR:-$PWD}}"
 cd "${REPO_ROOT}"
 mkdir -p "${REPO_ROOT}/sbatch/logs"
 
-IMAGE_ROOT="${IMAGE_ROOT:-${HOME}/sandbox/tx_analysis_data/imagenet100}"
+IMAGE_ROOT="${IMAGE_ROOT:-${REPO_ROOT}/data_dir/imagenet100}"
 IMAGE_SIZE="${IMAGE_SIZE:-256}"
 OUT_DIR="${OUT_DIR:-${IMAGE_ROOT}/latents_sdvae_ft_mse_${IMAGE_SIZE}}"
 VAE_ID="${VAE_ID:-stabilityai/sd-vae-ft-mse}"
@@ -43,7 +43,7 @@ DECODE_SAMPLES="${DECODE_SAMPLES:-16}"
 SPLITS="${SPLITS:-train val}"
 
 # Keep HF downloads off the login-node home defaults / GPFS-friendly cache.
-export HF_HOME="${HF_HOME:-${HOME}/sandbox/tx_analysis_data/hf_home}"
+export HF_HOME="${HF_HOME:-${REPO_ROOT}/data_dir/hf_home}"
 export HUGGINGFACE_HUB_CACHE="${HUGGINGFACE_HUB_CACHE:-${HF_HOME}/hub}"
 mkdir -p "${HF_HOME}" "${HUGGINGFACE_HUB_CACHE}"
 

@@ -14,16 +14,17 @@ Python 3.13. From the repository root:
 uv sync
 ```
 
-Paper runs expect a CUDA GPU. Outputs go to `results_dir/` and datasets to `data_dir/`, both at the repository root and both gitignored. On this cluster they are symlinks:
+Paper runs expect a CUDA GPU. Outputs go to `results_dir/` and datasets to `data_dir/`, both at the repository root and both gitignored. Create those two directories, or symlink them to wherever you keep the files. Commands below are run from the repository root. Each run writes the numbers next to its checkpoint: `metrics.json` for images and RxRx1, and `final_metrics.json` plus `heldout_curve.json` for the transcriptomics streams. Those files are what the tables aggregate.
+
+Before submitting, replace the placeholders in every `sbatch/` header:
 
 ```text
-data_dir    -> ~/sandbox/tx_analysis_data
-results_dir -> ~/sandbox/tx_analysis_results
+#SBATCH --qos=YOUR_QOS
+#SBATCH --partition=YOUR_GPU_PARTITION   # or YOUR_CPU_PARTITION
+#SBATCH --wckey=YOUR_WCKEY
 ```
 
-Elsewhere, create those two directories yourself. Commands below are run from the repository root. Each run writes the numbers next to its checkpoint: `metrics.json` for images and RxRx1, and `final_metrics.json` plus `heldout_curve.json` for the transcriptomics streams. Those files are what the tables aggregate.
-
-SLURM launchers under `sbatch/` use this cluster's QoS `hooke-predict` and partitions `cpu`, `def`, or `hopper`. Change those directives before submitting somewhere else. `DRY_RUN=1` prints the jobs without submitting them.
+`YOUR_GPU_PARTITION` is for training jobs. `YOUR_CPU_PARTITION` is for CPU-only jobs. Delete the `wckey` line if your cluster does not use one. `DRY_RUN=1` prints the jobs without submitting them.
 
 Optional extras:
 
@@ -109,7 +110,7 @@ uv run python scripts/encode_imagenet_vae_latents.py \
 export LATENT_DIR=data_dir/imagenet100/latents_sdvae_ft_mse_256
 ```
 
-Without `LATENT_DIR`, ImageNet training looks in `~/sandbox/tx_analysis_data/imagenet100/latents_sdvae_ft_mse_256`.
+Without `LATENT_DIR`, ImageNet training reads `data_dir/imagenet100/latents_sdvae_ft_mse_256`.
 
 Replogle, only if `data/replogle/adata.h5ad` is missing. Place the 6,642-gene panel, already library-size normalized to \(10^4\), \(\log(1+x)\)-transformed, with `var.highly_variable` set, at `data_dir/replogle/replogle.h5ad`. Then:
 

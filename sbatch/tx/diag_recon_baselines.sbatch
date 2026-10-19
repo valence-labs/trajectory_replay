@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=recon-baselines
-#SBATCH --qos=normal
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=128G
 #SBATCH --time=2:00:00
 #SBATCH --output=sbatch/logs/recon_baselines_%j.log
-#SBATCH --partition=cpu
+#SBATCH --partition=YOUR_CPU_PARTITION
 
 # Sanity baselines (mean predictor, pool mean, PCA-256) for the recon bench.
 #

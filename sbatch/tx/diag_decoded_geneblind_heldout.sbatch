@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=tx-decoded-blind
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=256G
 #SBATCH --time=04:00:00
 #SBATCH --output=sbatch/logs/tx_decoded_geneblind_%j.log
-#SBATCH --partition=cpu
+#SBATCH --partition=YOUR_CPU_PARTITION
 
 # Gene-blind / T0-transfer baselines on decoded PCA means (HepG2 affine D1).
 #

@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=imagenet-convert
-#SBATCH --partition=cpu
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --partition=YOUR_CPU_PARTITION
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=192G
@@ -29,9 +29,9 @@ mkdir -p "${REPO_ROOT}/sbatch/logs"
 
 MODE="${MODE:-full_then_symlink}"
 WORKERS="${WORKERS:-${SLURM_CPUS_PER_TASK:-16}}"
-HF_RAW="${HF_RAW:-${HOME}/sandbox/tx_analysis_data/imagenet/hf_raw}"
-IMAGENET_ROOT="${IMAGENET_ROOT:-${HOME}/sandbox/tx_analysis_data/imagenet}"
-IMAGENET100_ROOT="${IMAGENET100_ROOT:-${HOME}/sandbox/tx_analysis_data/imagenet100}"
+HF_RAW="${HF_RAW:-${REPO_ROOT}/data_dir/imagenet/hf_raw}"
+IMAGENET_ROOT="${IMAGENET_ROOT:-${REPO_ROOT}/data_dir/imagenet}"
+IMAGENET100_ROOT="${IMAGENET100_ROOT:-${REPO_ROOT}/data_dir/imagenet100}"
 SYNSETS_FILE="${SYNSETS_FILE:-${REPO_ROOT}/src/trajectory_replay/data/imagenet100_cmc.txt}"
 
 echo "host=$(hostname) job=${SLURM_JOB_ID:-local} mode=${MODE} workers=${WORKERS}"

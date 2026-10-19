@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=px-observed-grids
-#SBATCH --qos=normal
-#SBATCH --wckey=hooke-predict
-#SBATCH --partition=cpu
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
+#SBATCH --partition=YOUR_CPU_PARTITION
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=16G

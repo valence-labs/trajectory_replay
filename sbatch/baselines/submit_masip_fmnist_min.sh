@@ -37,7 +37,7 @@ case "${DATASET}" in
     JOB_PREFIX="${JOB_PREFIX:-masip-in100}"
     SOLVER_TYPE="${SOLVER_TYPE:-None}"
     TIME="${TIME:-48:00:00}"
-    QOS="${QOS:-normal}"
+    QOS="${QOS:-YOUR_QOS}"
     ;;
   *)
     GENERATION_STEPS="${GENERATION_STEPS:-10}"
@@ -49,10 +49,9 @@ KEEP_CHECKPOINTS="${KEEP_CHECKPOINTS:-0}"
 # Required on H100: torch 2.0.1 fused attention kernels miscompile on sm_90.
 DISABLE_FUSED_SDPA="${DISABLE_FUSED_SDPA:-1}"
 
-SANDBOX_ROOT="${SANDBOX_ROOT:-${HOME}/sandbox}"
-DATA_CACHE="${DATA_CACHE:-${SANDBOX_ROOT}/trajectory_replay/data_cache}"
-OUTPUT_DIR="${OUTPUT_DIR:-${SANDBOX_ROOT}/trajectory_replay/baselines/masip}"
-LATENT_DIR="${LATENT_DIR:-${HOME}/sandbox/tx_analysis_data/imagenet100/latents_sdvae_ft_mse_256}"
+DATA_CACHE="${DATA_CACHE:-${REPO_ROOT}/data_dir/cache}"
+OUTPUT_DIR="${OUTPUT_DIR:-${REPO_ROOT}/results_dir/baselines/masip}"
+LATENT_DIR="${LATENT_DIR:-${REPO_ROOT}/data_dir/imagenet100/latents_sdvae_ft_mse_256}"
 VAE_ID="${VAE_ID:-stabilityai/sd-vae-ft-mse}"
 
 SBATCH_SCRIPT="${SCRIPT_DIR}/train_masip_cl.sbatch"
@@ -72,7 +71,7 @@ for strategy in "${STRATEGIES[@]}"; do
     export_vars="ALL,DATASET=${DATASET},STRATEGY=${strategy},SEED=${seed},LAMBD=${LAMBD}"
     export_vars+=",GENERATION_STEPS=${GENERATION_STEPS},SOLVER_TYPE=${SOLVER_TYPE}"
     export_vars+=",KEEP_CHECKPOINTS=${KEEP_CHECKPOINTS},DISABLE_FUSED_SDPA=${DISABLE_FUSED_SDPA}"
-    export_vars+=",OUTPUT_DIR=${OUTPUT_DIR},DATA_CACHE=${DATA_CACHE},SANDBOX_ROOT=${SANDBOX_ROOT}"
+    export_vars+=",OUTPUT_DIR=${OUTPUT_DIR},DATA_CACHE=${DATA_CACHE}"
     export_vars+=",REPO_ROOT=${REPO_ROOT}"
     if [[ "${DATASET}" == "split_imagenet100" ]]; then
       export_vars+=",LATENT_DIR=${LATENT_DIR},VAE_ID=${VAE_ID}"

@@ -118,24 +118,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--masip-root",
         type=Path,
-        default=(
-            Path.home()
-            / "sandbox"
-            / "trajectory_replay"
-            / "baselines"
-            / "masip"
-        ),
+        default=REPO_ROOT / "results_dir" / "baselines" / "masip",
     )
     parser.add_argument(
         "--masip-imagenet-root",
         type=Path,
-        default=(
-            Path.home()
-            / "sandbox"
-            / "trajectory_replay"
-            / "baselines"
-            / "masip_fm_budget"
-        ),
+        default=REPO_ROOT / "results_dir" / "baselines" / "masip_fm_budget",
     )
     return parser.parse_args()
 

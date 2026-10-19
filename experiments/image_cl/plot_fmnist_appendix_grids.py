@@ -72,9 +72,8 @@ def _sources(seed: int, *, pool_tag: str = "") -> dict[str, Path]:
             )
         ),
         "masip": (
-            Path.home()
-            / "sandbox"
-            / "trajectory_replay"
+            REPO_ROOT
+            / "results_dir"
             / "baselines"
             / "masip"
             / "split_fmnist"

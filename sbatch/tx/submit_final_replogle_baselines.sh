@@ -15,7 +15,7 @@ SEEDS=(${SEEDS:-42 69 1714})
 DECODER_DIR="${DECODER_DIR:-${REPO_ROOT}/results_dir/tx_results/replogle/decoders_pca50_affine}"
 
 submit() {
-  extra_opts=(--qos=normal --exclude=hop63 ${SBATCH_OPTS:-})
+  extra_opts=(--qos=YOUR_QOS ${SBATCH_OPTS:-})
   if [[ "${DRY_RUN}" == "1" ]]; then
     echo "sbatch ${extra_opts[*]} $*" >&2
     echo "dry-run"

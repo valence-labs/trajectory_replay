@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=tx-oneshot-oracle
-#SBATCH --qos=normal
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=256G
 #SBATCH --time=04:00:00
 #SBATCH --output=sbatch/logs/tx_oneshot_oracle_%j.log
-#SBATCH --partition=cpu
+#SBATCH --partition=YOUR_CPU_PARTITION
 
 # Oracle Pearson-Δ for a one-shot run: decode observed embeddings, no ODE.
 #

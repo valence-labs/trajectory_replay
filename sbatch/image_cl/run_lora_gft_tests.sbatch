@@ -6,14 +6,14 @@
 #   sbatch sbatch/image_cl/run_lora_gft_tests.sbatch
 #   SMOKE=0 sbatch sbatch/image_cl/run_lora_gft_tests.sbatch   # unit tests only
 #SBATCH --job-name=image-cl-lora-gft-tests
-#SBATCH --qos=normal
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --time=02:00:00
 #SBATCH --output=sbatch/logs/image_cl_lora_gft_tests_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 
 set -euo pipefail

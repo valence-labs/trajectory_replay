@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=px-representative
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
-#SBATCH --partition=hopper
-#SBATCH --gres=gpu:h100:1
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
+#SBATCH --partition=YOUR_GPU_PARTITION
+#SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=64G
 #SBATCH --time=02:00:00

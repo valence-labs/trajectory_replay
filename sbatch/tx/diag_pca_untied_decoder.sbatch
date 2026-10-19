@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=tx-pca-untied-d
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=256G
 #SBATCH --time=04:00:00
 #SBATCH --output=sbatch/logs/tx_pca_untied_%j.log
-#SBATCH --partition=def
+#SBATCH --partition=YOUR_GPU_PARTITION
 #SBATCH --gres=gpu:1
 
 # Task-0 PCA encoder: tied inverse vs HepG2-only linear D_1 (no CFM).

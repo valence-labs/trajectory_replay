@@ -25,6 +25,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
 export DATASET=split_imagenet100
 # Eval NFE (FID / sample dump). Replay NFE for distill is teacher_steps in
@@ -33,8 +34,8 @@ export GENERATION_STEPS="${GENERATION_STEPS:-50}"
 export JOB_PREFIX="${JOB_PREFIX:-masip-in100}"
 export SOLVER_TYPE="${SOLVER_TYPE:-None}"
 export TIME="${TIME:-48:00:00}"
-export QOS="${QOS:-normal}"
-export LATENT_DIR="${LATENT_DIR:-${HOME}/sandbox/tx_analysis_data/imagenet100/latents_sdvae_ft_mse_256}"
+export QOS="${QOS:-YOUR_QOS}"
+export LATENT_DIR="${LATENT_DIR:-${REPO_ROOT}/data_dir/imagenet100/latents_sdvae_ft_mse_256}"
 export VAE_ID="${VAE_ID:-stabilityai/sd-vae-ft-mse}"
 # Match FM ImageNet class-cond protocol by default.
 export CLASS_CONDITIONAL="${CLASS_CONDITIONAL:-1}"

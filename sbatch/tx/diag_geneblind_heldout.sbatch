@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=tx-geneblind-held
-#SBATCH --qos=hooke-predict
-#SBATCH --wckey=hooke-predict
+#SBATCH --qos=YOUR_QOS
+#SBATCH --wckey=YOUR_WCKEY
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=256G
 #SBATCH --time=04:00:00
 #SBATCH --output=sbatch/logs/tx_geneblind_heldout_%j.log
-#SBATCH --partition=cpu
+#SBATCH --partition=YOUR_CPU_PARTITION
 
 # Training-available gene-blind Pearson-Δ and L1-discrimination on HepG2 heldout.
 #
