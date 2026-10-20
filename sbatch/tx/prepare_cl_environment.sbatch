@@ -17,6 +17,6 @@ mkdir -p sbatch/logs
 
 # Sync the shared environment once before the campaign. Running this from every
 # GPU job concurrently can contend on or partially rewrite the same .venv.
-uv sync --extra cell-eval --extra vcb
+uv sync --extra cell-eval
 "${REPO_ROOT}/.venv/bin/python3" -c \
   "from cell_eval import MetricsEvaluator; import torch"

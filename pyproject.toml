@@ -27,13 +27,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-vcb = ["vcb", "loguru>=0.7.3"]
 cell-eval = [
     "cell-eval>=0.7.2",
 ]
-
-[tool.uv.sources]
-vcb = { path = "external/vcb", editable = true }
 
 [tool.setuptools.packages.find]
 where = ["src", "."]

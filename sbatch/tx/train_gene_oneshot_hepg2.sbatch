@@ -48,7 +48,7 @@ fi
 echo "RUN_NAME=${RUN_NAME} TARGET_STEPS=${TARGET_STEPS} SEED=${SEED} HIDDEN_DIM=${HIDDEN_DIM} DEPTH=${DEPTH} H5AD_PATH=${H5AD_PATH}"
 
 if [[ "${SYNC_ENV}" == "1" ]]; then
-  uv sync --extra cell-eval --extra vcb
+  uv sync --extra cell-eval
 fi
 "${PYTHON_BIN}" -c "from cell_eval import MetricsEvaluator"
 

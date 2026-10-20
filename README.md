@@ -26,13 +26,10 @@ Before submitting, replace the placeholders in every `sbatch/` header:
 
 `YOUR_GPU_PARTITION` is for training jobs. `YOUR_CPU_PARTITION` is for CPU-only jobs. Delete the `wckey` line if your cluster does not use one. `DRY_RUN=1` prints the jobs without submitting them.
 
-Optional extras:
+Optional extra:
 
 ```bash
 uv sync --extra cell-eval    # DE Overlap used in §4.4
-mkdir -p external
-git clone https://github.com/valence-labs/vcb.git -b main external/vcb
-uv sync --extra vcb          # optional; the vcb extra is a path dependency
 ```
 
 ## Datasets

@@ -125,7 +125,7 @@ PY
 
   if [[ "${RUN_LOCAL}" == "1" ]]; then
     echo "local cell-eval: ${run_path}"
-    uv sync --extra cell-eval --extra vcb
+    uv sync --extra cell-eval
     uv run python -c "from cell_eval import MetricsEvaluator"
     local_args=(experiments/tx/run_cell_eval.py "${run_path}" --device "${DEVICE:-cuda}")
     if [[ -n "${EVAL_PHASES:-}" ]]; then

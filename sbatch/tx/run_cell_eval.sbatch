@@ -40,8 +40,7 @@ echo "SIM_ROOT=$(pwd)  TX_RESULTS_BUCKET=${TX_RESULTS_BUCKET}  RUN_PATH=${RUN_PA
 echo "  PROFILE=${PROFILE}  DEVICE=${DEVICE}  EVAL_PHASES=${EVAL_PHASES:-<metrics>}  CONTEXT=${CONTEXT:-all}"
 echo "  USE_OBSERVED_CONTROLS_ONLY=${USE_OBSERVED_CONTROLS_ONLY}  USE_RAW_X=${USE_RAW_X}"
 
-# Install both extras so concurrent vcb jobs do not strip cell-eval from the shared venv.
-uv sync --extra cell-eval --extra vcb
+uv sync --extra cell-eval
 uv run python -c "from cell_eval import MetricsEvaluator"
 
 eval_args=(experiments/tx/run_cell_eval.py "${RUN_PATH}" --device "${DEVICE}" --profile "${PROFILE}" --num-threads "${NUM_THREADS}")
