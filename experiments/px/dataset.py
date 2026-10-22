@@ -18,7 +18,7 @@ NUM_CHANNELS = 6
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 METADATA_PATH = os.environ.get(
     "RXRX1_METADATA_PATH",
-    str(_REPO_ROOT / "data_dir" / "rxrx1" / "rxrx1_metadata.csv"),
+    str(_REPO_ROOT / "data" / "rxrx1" / "rxrx1_metadata.csv"),
 )
 
 

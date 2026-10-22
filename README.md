@@ -76,7 +76,8 @@ The Hub dataset does **not** contain two large pieces. They live only in the sep
 | PBMC AnnData `adata.h5ad` | Not in the Hub dataset and not a public one-command download. It is in `trajectory_replay_paper_bundle_extra`. |
 | RxRx1 flow-matching checkpoints and all RxRx1 metrics, including Masip | In the bundle under `results/px/`. |
 | RxRx1 Masip checkpoints | Not in the Hub dataset. In `trajectory_replay_paper_bundle_extra`. |
-| RxRx1 crops and `rxrx1_metadata.csv` | Not in either archive. [RxRx1](https://www.rxrx.ai/rxrx1) is the public release, but this code reads cropped `uint8` arrays of shape `(96, 96, 6)` listed in the metadata CSV. That cropped table is not a one-command download. |
+| RxRx1 metadata | In the repo at `data/rxrx1/rxrx1_metadata.csv`. |
+| RxRx1 crops | Not in the bundle. Same 6-channel `.npy` crops as IMPA, in [Zenodo 8307629](https://zenodo.org/records/8307629). After unzipping, point `data_dir/rxrx1` at `datasets/rxrx1`. The CSV `path` column is `data_dir/rxrx1/<experiment>_<plate>/<well>/<view>_<cell>.npy`. |
 
 KLD on Fashion-MNIST and CIFAR-10 uses the classifiers shipped with the Masip clone, under `baselines/diffusion_continual_learning/weights/`. Clone it as in [baselines/README.md](baselines/README.md).
 
@@ -128,7 +129,7 @@ uv run python experiments/tx/prepare_cl_decoders.py \
   --dataset pbmc --representation pca --pca-dim 100 --device cuda
 ```
 
-RxRx1 training reads `data_dir/rxrx1/rxrx1_metadata.csv` (`RXRX1_METADATA_PATH` overrides that). Required columns are `path`, `experiment_id`, `perturbation_id`, `SPLIT`, `ANNOT`, and `is_eval_pert`. Each `path` is a `uint8` NumPy array of shape `(96, 96, 6)`. Experiments are ordered U2OS-01, U2OS-02, U2OS-03.
+RxRx1 training reads `data/rxrx1/rxrx1_metadata.csv` (`RXRX1_METADATA_PATH` overrides that). Required columns are `path`, `experiment_id`, `perturbation_id`, `SPLIT`, `ANNOT`, and `is_eval_pert`. Each `path` is a `uint8` NumPy array of shape `(96, 96, 6)` under `data_dir/rxrx1/`, from the Zenodo archive above. Experiments are ordered U2OS-01, U2OS-02, U2OS-03.
 
 ## §4.1 Controlled mixture recovery
 
@@ -301,7 +302,7 @@ Pearson \(\Delta\) is written by the training job (`final_metrics.json`, `heldou
 
 Three U2OS acquisition batches, in order U2OS-01, U2OS-02, U2OS-03, over 1,071 perturbations. Inputs are native 6×96×96 crops in \([-1, 1]\), with uniform dequantization and random flips at training time. The backbone is a Config-B ADM U-Net (56.2M parameters) conditioned on perturbation and experiment. Each task is 25,000 Adam steps at \(10^{-4}\), batch 64, gradient clip 0.5, and a power-function EMA. Seeds are \(\{42, 69, 1714\}\). Replay uses Euler step 0.05. Adaptive \(\lambda\) is \(\{0.25, 0.5, 0.75\}\), chosen by macro validation FID. Evaluation generates one image per treated test condition (2,942 images) and reports pooled Inception FID and DINOv2 Fréchet distance from the EMA weights.
 
-Point `RXRX1_METADATA_PATH` at the metadata table from the dataset section if it is not already at `data_dir/rxrx1/rxrx1_metadata.csv`.
+The metadata table is `data/rxrx1/rxrx1_metadata.csv`. `RXRX1_METADATA_PATH` overrides that. The image paths in the table resolve once `data_dir/rxrx1` points at the Zenodo `datasets/rxrx1` folder.
 
 ```bash
 # Full flow-matching matrix, one shared task-0 checkpoint per seed:
